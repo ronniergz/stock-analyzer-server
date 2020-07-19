@@ -1,0 +1,15 @@
+[
+  {
+    "_id": "01",
+    "username": "Pete",
+    "password": "1234567",
+    "wishlist": ["ATHM", "AAPL", "NVDA"]  
+  },
+  {
+    "_id": "02",
+    "username": "Dana",
+    "password": "abcdefg",
+    "wishlist": ["DIS", "COST", "IRMD"] 
+  }
+]
+
