@@ -1,41 +1,56 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class Equity extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      symbol: '',
-      values: {}}
+      symbol: "",
+      rawPrice: "",
+      rawEps: "",
+      rawPE: "",
+    };
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.getData = this.getData.bind(this);
   }
 
-  componentWillMount() {
-    fetch
+  static getDerivedStateFromProps(props, state) {
+    return { symbol: props.symbol };
   }
 
-  getData(symbol) {
-    var xhr = new XMLHttpRequest()
-      // get a callback when the server responds
-      xhr.addEventListener('load', () => {
-        // update the state of the component with the result here
-        console.log(xhr.responseText)
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData() {
+    fetch("http://192.168.1.82:5000/api/scrape?symbol=" + this.state.symbol)
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log(
+            "Looks like there was a problem. Status Code: " + response.status
+          );
+          return;
+        }
+        response.json().then((data) =>
+          this.setState({
+            Price: data.Price,
+            Eps: data.EPS,
+            Pe: data.PE,
+          })
+        );
       })
-      // open the request with the verb and the url
-      xhr.open('GET', 'localhost:5000/api/scrape?symbol=' + symbol)
-      // send the request
-      xhr.send()
-   }
+      .catch(function (err) {
+        console.log("Fetch Error :-S", err);
+      });
+  }
 
   render() {
-    
-
     return (
       <div>
-        <h4>{this.props.symbol}</h4>
-        <p>{get}</p>
-        <p>{3.25}</p>
-        <p>{90.27}</p>
-      </div>  
+        <h4>{this.state.symbol}</h4>
+        <p>{this.state.Price}</p>
+        <p>{this.state.Eps}</p>
+        <p>{this.state.Pe}</p>
+      </div>
     );
   }
 }
