@@ -3,11 +3,12 @@ import React, { Component } from "react";
 class Equity extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       symbol: "",
-      rawPrice: "",
-      rawEps: "",
-      rawPE: "",
+      Price: "",
+      Eps: "",
+      PE: "",
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getData = this.getData.bind(this);
@@ -22,8 +23,8 @@ class Equity extends Component {
   }
 
   getData() {
-    fetch("http://192.168.1.82:5000/api/scrape?symbol=" + this.state.symbol)
-      .then(function (response) {
+    fetch("http://192.168.1.81:5000/api/scrape?symbol=" + this.state.symbol)
+      .then((response) => {
         if (response.status !== 200) {
           console.log(
             "Looks like there was a problem. Status Code: " + response.status
