@@ -12,6 +12,8 @@
     "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "nodemon": "^2.0.4",
+    "promise": "^8.1.0",
     "puppeteer": "^5.1.0",
     "request": "^2.88.2",
     "xmldom": "^0.3.0",
