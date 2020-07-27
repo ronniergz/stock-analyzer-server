@@ -34,7 +34,7 @@ class WishList extends Component {
   render() {
     return (
       <Container>
-        <h1>Wish List Component</h1>
+        <h1>Wish List</h1>
         <h4>
           <a href="/home">Home</a>
         </h4>
@@ -52,7 +52,9 @@ class WishList extends Component {
           </TableHeading>
           <TableBody>
             {users[0].wishlist.map((stock, i) => {
-              return <Equity symbol={stock.symbol} growth={stock.growth} key={i} />;
+              return (
+                <Equity symbol={stock.symbol} growth={stock.growth} key={i} />
+              );
             })}
           </TableBody>
         </Table>
