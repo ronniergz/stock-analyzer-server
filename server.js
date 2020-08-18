@@ -1,3 +1,7 @@
+require("./api/data/db.js");
+const mongoose = require("mongoose");
+const Equity = mongoose.model("Equity");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -12,6 +16,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/hello", (req, res) => {
   res.send({ express: "Hello From Express!" });
+});
+
+app.get("/api/equities", (req, res) => {
+  Equity.find().exec(function (err, equities) {
+    console.log("Found equities", equities.length);
+    res.json(equities);
+  });
 });
 
 app.get("/api/scrape", cors(), (req, res) => {
