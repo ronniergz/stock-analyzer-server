@@ -12,12 +12,15 @@
     "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+<<<<<<< HEAD
     "mongodb": "^3.6.0",
     "mongoose": "^5.10.0",
+=======
+    "node-fetch": "^2.6.0",
+>>>>>>> f93f55368998b329b2871ffa117a06b82bfbc3af
     "nodemon": "^2.0.4",
     "promise": "^8.1.0",
     "puppeteer": "^5.1.0",
-    "request": "^2.88.2",
     "xmldom": "^0.3.0",
     "xpath": "0.0.27"
   },

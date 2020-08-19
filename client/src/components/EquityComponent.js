@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const TableRow = styled.div`
   display: table-row;
@@ -15,12 +15,12 @@ class Equity extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      symbol: "", 
+      symbol: "",
       price: "",
       eps: "",
       pe: "",
       growth: "",
-      mos: "",    
+      mos: "",
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getData = this.getData.bind(this);
@@ -32,19 +32,21 @@ class Equity extends Component {
   }
 
   componentDidMount() {
-    this.getData(); 
+    this.getData();
   }
 
-  getMos() {      // calculates margin of safety and updates state object
+  getMos() {
+    // calculates margin of safety and updates state object
     let x = 1 + parseFloat(this.state.growth);
-    let futEps = this.state.eps*(Math.pow(x,10));
+    let futEps = this.state.eps * Math.pow(x, 10);
     let futPe = this.state.pe;
-    let Mos = (this.state.price/((futEps*futPe)/4)).toFixed(2);
-    this.setState({ mos: Mos});
+    let Mos = (this.state.price / ((futEps * futPe) / 4)).toFixed(2);
+    this.setState({ mos: Mos });
   }
 
-  getData() {   // request current scraped data from server
-    fetch("http://192.168.1.81:5000/api/scrape?symbol=" + this.state.symbol)
+  getData() {
+    // request current scraped data from server
+    fetch("http://192.168.1.82:5000/api/scrape?symbol=" + this.state.symbol)
       .then((response) => {
         if (response.status !== 200) {
           console.log(
@@ -59,7 +61,7 @@ class Equity extends Component {
             pe: data.PE,
           });
           this.getMos();
-        })
+        });
       })
       .catch(function (err) {
         console.log("Fetch Error :-S", err);
@@ -73,8 +75,8 @@ class Equity extends Component {
         <TableCell>{this.state.price}</TableCell>
         <TableCell>{this.state.pe}</TableCell>
         <TableCell>{this.state.eps}</TableCell>
-        <TableCell>{this.state.growth*100}%</TableCell>
-        <TableCell>{this.state.mos*100}%</TableCell>
+        <TableCell>{this.state.growth * 100}%</TableCell>
+        <TableCell>{this.state.mos * 100}%</TableCell>
       </TableRow>
     );
   }

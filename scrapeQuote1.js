@@ -1,9 +1,10 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const fetch = require("node-fetch");
 
 module.exports = async function scrape(symbol) {
   async function fetchHTML(url) {
-    const { data } = await axios.get(url);
+    const data = await fetch(url);
     return cheerio.load(data);
   }
 

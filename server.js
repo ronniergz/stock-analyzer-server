@@ -5,7 +5,7 @@ const Equity = mongoose.model("Equity");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const scrape = require("./scrapeQuote.js");
+const scrape = require("./scrapeQuote1.js");
 
 const app = express();
 const port = process.env.PORT || 5000;
