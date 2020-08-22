@@ -8,15 +8,12 @@ var equitySchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true,
   },
   pe: {
     type: Number,
-    required: true,
   },
   eps: {
     type: Number,
-    required: true,
   },
 });
 
