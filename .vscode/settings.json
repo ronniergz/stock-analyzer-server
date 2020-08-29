@@ -1,0 +1,6 @@
+{
+  "terminal.integrated.scrollback": 100000,
+  "prettier.printWidth": 160,
+  "prettier.bracketSpacing": false,
+  "prettier.singleQuote": true
+}

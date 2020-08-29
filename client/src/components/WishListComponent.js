@@ -1,7 +1,6 @@
-import React, { Component } from "react";
-import Equity from "./EquityComponent";
-import users from "../data/data.json";
-import styled from "styled-components";
+import React, {Component} from 'react';
+import Equity from './EquityComponent';
+import styled from 'styled-components';
 
 const Container = styled.div`
   font-size: 0.8rem;
@@ -31,6 +30,30 @@ const TableBody = styled.div`
 `;
 
 class WishList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: '',
+      watchlist: [],
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange = (event) => {
+    const input = event.target;
+    this.setState({[input.name]: input.value});
+  };
+
+  handleSubmit = (values) => {
+    console.log('Form Submitted!');
+    this.setState((state) => {
+      const list = state.watchList.concat(state.value);
+    });
+  };
+
   render() {
     return (
       <Container>
@@ -51,13 +74,19 @@ class WishList extends Component {
             <TableHead>MOS</TableHead>
           </TableHeading>
           <TableBody>
-            {users[0].wishlist.map((stock, i) => {
-              return (
-                <Equity symbol={stock.symbol} growth={stock.growth} key={i} />
-              );
+            {this.state.watchlist.map((equity, i) => {
+              return <Equity symbol={equity.symbol} growth={equity.growth} futpe={equity.futpe} key={i} />;
             })}
           </TableBody>
         </Table>
+        <div>
+          <form onSubmit={(values) => this.handleSubmit(values)}>
+            <input type="text" name="symbol" value={this.state.value.symbol} onChange={this.handleChange} />
+            <input type="number" name="growth" step=".01" value={this.state.value.growth} onChange={this.handleChange} />
+            <input type="number" name="futpe" step=".1" value={this.state.value.futpe} onChange={this.handleChange} />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       </Container>
     );
   }
