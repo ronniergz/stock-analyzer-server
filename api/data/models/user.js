@@ -1,30 +1,36 @@
 var mongoose = require("mongoose");
 
-var itemSchema = new mongoose.Schema({
+var equitySchema = new mongoose.Schema({
   symbol: {
     type: String,
-    required: true,
-    unique: true,
   },
   growth: {
     type: Number,
-    required: true,
   },
   futpe: {
     type: Number,
-    required: true,
   },
 });
+
 var userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
     required: true,
+    unique: true,
   },
-  wishlist: [itemSchema],
+  wishlist: [equitySchema],
+});
+
+userSchema.pre("save", function (next) {
+  if (this.isNew) {
+    this.wishlist = undefined;
+  }
+  next();
 });
 
 module.exports = mongoose.model("User", userSchema);

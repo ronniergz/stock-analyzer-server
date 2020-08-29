@@ -1,5 +1,21 @@
 [
   {
+    "username": "Gerald",
+    "password": "125690",
+    "wishlist": [
+      {
+        "symbol": "T",
+        "growth": 0.14,
+        "futpe": 25
+      },
+      {
+        "symbol": "k",
+        "growth": 0.1,
+        "futpe": 76
+      }
+    ]
+  },
+  {
     "username": "Dana",
     "password": "abcdefg",
     "wishlist": [
@@ -16,19 +32,7 @@
     ]
   },
   {
-    "username": "pete",
-    "password": "1234567",
-    "wishlist": [
-      {
-        "symbol": "ATHM",
-        "growth": "",
-        "futpe": ""
-      },
-      {
-        "symbol": "AAPL",
-        "growth": "",
-        "futpe": ""
-      }
-    ]
+    "username": "Tony",
+    "password": "charmander"
   }
 ]
