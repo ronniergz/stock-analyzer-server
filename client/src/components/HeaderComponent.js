@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 
 const AppHeader = styled.div`
@@ -13,12 +13,10 @@ const AppHeader = styled.div`
 `;
 
 class Header extends Component {
-
   render() {
-
     return (
       <AppHeader>
-        <h1>Rule#1</h1>
+        <h1>Stock Tracker</h1>
       </AppHeader>
     );
   }

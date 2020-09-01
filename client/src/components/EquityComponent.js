@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import styled from "styled-components";
+import React, {Component} from 'react';
+import styled from 'styled-components';
 
 const TableRow = styled.div`
   display: table-row;
@@ -15,12 +15,12 @@ class Equity extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      symbol: "",
-      price: "",
-      eps: "",
-      pe: "",
-      growth: "",
-      mos: "",
+      symbol: '',
+      price: '',
+      eps: '',
+      pe: '',
+      growth: '',
+      mos: '',
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getData = this.getData.bind(this);
@@ -28,7 +28,7 @@ class Equity extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    return { symbol: props.symbol, growth: props.growth };
+    return {symbol: props.symbol, pe: props.futpe, growth: props.growth};
   }
 
   componentDidMount() {
@@ -41,30 +41,27 @@ class Equity extends Component {
     let futEps = this.state.eps * Math.pow(x, 10);
     let futPe = this.state.pe;
     let Mos = (this.state.price / ((futEps * futPe) / 4)).toFixed(2);
-    this.setState({ mos: Mos });
+    this.setState({mos: Mos});
   }
 
   getData() {
     // request current scraped data from server
-    fetch("http://192.168.1.82:5000/api/scrape?symbol=" + this.state.symbol)
+    fetch('http://192.168.1.81:5000/api/scrape?symbol=' + this.state.symbol)
       .then((response) => {
         if (response.status !== 200) {
-          console.log(
-            "Looks like there was a problem. Status Code: " + response.status
-          );
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
           return;
         }
         response.json().then((data) => {
           this.setState({
             price: data.Price,
             eps: data.EPS,
-            pe: data.PE,
           });
           this.getMos();
         });
       })
       .catch(function (err) {
-        console.log("Fetch Error :-S", err);
+        console.log('Fetch Error :-S', err);
       });
   }
 
