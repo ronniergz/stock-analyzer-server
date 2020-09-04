@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import {Row, Col, Button, Form, FormGroup, FormText, Label, Input} from 'reactstrap';
 
 const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
   font-size: 0.8rem;
   @media (min-width: 600px) {
     font-size: 1rem;
@@ -122,7 +124,7 @@ class WishList extends Component {
             </FormGroup>
             <FormGroup row>
               <Label for="growth" sm={3}>
-                Growth
+                Projected Growth
               </Label>
               <Col sm={4}>
                 <Input type="number" name="growth" step=".01" value={this.state.equity.growth} onChange={this.handleChange} />
