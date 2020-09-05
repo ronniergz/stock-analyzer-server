@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import { Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input } from 'reactstrap';
+import {Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input} from 'reactstrap';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -69,13 +69,13 @@ class TradeCalc extends Component {
     const input = event.target;
     const field = input.name;
     this.validate(input);
-    this.setState({ [field]: input.value }, () => {
+    this.setState({[field]: input.value}, () => {
       console.log(JSON.stringify(this.state));
       // Check if we have price and share count to calculate amount traded
       if (this.state.shares !== '' && this.state.purchasePrice !== '') {
         console.log('IF condition validated');
-        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        this.setState({ amountTraded: traded }, () => {
+        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        this.setState({amountTraded: traded}, () => {
           console.log(JSON.stringify(this.state));
         });
       }
@@ -118,10 +118,10 @@ class TradeCalc extends Component {
         } else newErrors = {};
         break;
       default:
-        this.setState({ errors: initialState.errors });
+        this.setState({errors: initialState.errors});
         newErrors = {};
     }
-    this.setState({ errors: newErrors });
+    this.setState({errors: newErrors});
   }
 
   handleSubmit(event) {
@@ -140,11 +140,11 @@ class TradeCalc extends Component {
 
     this.setState(
       {
-        gain: gain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        shortTermGain: shortTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        shortTermNet: shortTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        longTermGain: longTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        longTermNet: longTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        gain: gain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        shortTermGain: shortTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        shortTermNet: shortTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        longTermGain: longTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        longTermNet: longTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
       },
       () => {
         this.toggleModal();
@@ -202,13 +202,7 @@ class TradeCalc extends Component {
                     Shares
                   </Label>
                   <InputGroup className="col-6">
-                    <Input
-                      required
-                      type="text"
-                      name="shares"
-                      value={this.state.shares}
-                      onChange={this.handleChange}
-                    ></Input>
+                    <Input required type="text" name="shares" value={this.state.shares} onChange={this.handleChange}></Input>
                   </InputGroup>
                 </FormGroup>
                 <Error>{this.state.errors.shares}</Error>
@@ -225,14 +219,7 @@ class TradeCalc extends Component {
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>$</InputGroupText>
                     </InputGroupAddon>
-                    <Input
-                      required
-                      type="text"
-                      name="purchasePrice"
-                      value={this.state.purchasePrice}
-                      onChange={this.handleChange}
-                      step=".01"
-                    ></Input>
+                    <Input required type="text" name="purchasePrice" value={this.state.purchasePrice} onChange={this.handleChange} step=".01"></Input>
                   </InputGroup>
                 </FormGroup>
                 <Error>{this.state.errors.purchasePrice}</Error>
@@ -246,14 +233,7 @@ class TradeCalc extends Component {
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>$</InputGroupText>
                     </InputGroupAddon>
-                    <Input
-                      readOnly
-                      type="text"
-                      name="amountTraded"
-                      value={this.state.amountTraded}
-                      onChange={this.handleChange}
-                      step=".01"
-                    ></Input>
+                    <Input readOnly type="text" name="amountTraded" value={this.state.amountTraded} onChange={this.handleChange} step=".01"></Input>
                   </InputGroup>
                 </FormGroup>
                 <Error></Error>
@@ -270,14 +250,7 @@ class TradeCalc extends Component {
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>$</InputGroupText>
                     </InputGroupAddon>
-                    <Input
-                      required
-                      type="text"
-                      name="salePrice"
-                      value={this.state.salePrice}
-                      onChange={this.handleChange}
-                      step=".01"
-                    ></Input>
+                    <Input required type="text" name="salePrice" value={this.state.salePrice} onChange={this.handleChange} step=".01"></Input>
                   </InputGroup>
                 </FormGroup>
                 <Error>{this.state.errors.salePrice}</Error>
@@ -291,14 +264,7 @@ class TradeCalc extends Component {
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>$</InputGroupText>
                     </InputGroupAddon>
-                    <Input
-                      required
-                      type="text"
-                      name="commission"
-                      value={this.state.commission}
-                      onChange={this.handleChange}
-                      step=".01"
-                    ></Input>
+                    <Input required type="text" name="commission" value={this.state.commission} onChange={this.handleChange} step=".01"></Input>
                   </InputGroup>
                 </FormGroup>
                 <Error>{this.state.errors.commission}</Error>
@@ -312,15 +278,7 @@ class TradeCalc extends Component {
                     Income Tax
                   </Label>
                   <InputGroup className="col-6">
-                    <Input
-                      required
-                      type="text"
-                      name="incomeTax"
-                      value={this.state.incomeTax}
-                      maxLength="2"
-                      onChange={this.handleChange}
-                      step=".1"
-                    ></Input>
+                    <Input required type="text" name="incomeTax" value={this.state.incomeTax} maxLength="2" onChange={this.handleChange} step=".1"></Input>
                     <InputGroupAddon addonType="append">
                       <InputGroupText>%</InputGroupText>
                     </InputGroupAddon>
@@ -356,7 +314,7 @@ class TradeCalc extends Component {
               <Button className="m-4 btn btn-success" type="submit">
                 Calculate
               </Button>
-              <Button className="m-4 btn btn-danger" onClick={this.handleClear}>
+              <Button className="m-4 btn btn-secondary" onClick={this.handleClear}>
                 Clear Fields
               </Button>
             </FormGroup>

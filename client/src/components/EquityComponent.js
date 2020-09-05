@@ -28,7 +28,7 @@ class Equity extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    return {symbol: props.symbol, pe: props.futpe, growth: props.growth};
+    return {symbol: props.symbol.toUpperCase(), pe: props.futpe, growth: props.growth};
   }
 
   componentDidMount() {
@@ -37,11 +37,11 @@ class Equity extends Component {
 
   getMos() {
     // calculates margin of safety and updates state object
-    let x = 1 + parseFloat(this.state.growth);
+    let x = 1 + parseFloat(this.state.growth) / 100;
     let futEps = this.state.eps * Math.pow(x, 10);
     let futPe = this.state.pe;
-    let Mos = (this.state.price / ((futEps * futPe) / 4)).toFixed(2);
-    this.setState({mos: Mos});
+    let Mos = this.state.price / ((futEps * futPe) / 4); //;
+    this.setState({mos: Mos.toFixed(2)});
   }
 
   getData() {
@@ -72,7 +72,7 @@ class Equity extends Component {
         <TableCell>{this.state.price}</TableCell>
         <TableCell>{this.state.pe}</TableCell>
         <TableCell>{this.state.eps}</TableCell>
-        <TableCell>{this.state.growth * 100}%</TableCell>
+        <TableCell>{this.state.growth}%</TableCell>
         <TableCell>{this.state.mos * 100}%</TableCell>
       </TableRow>
     );
