@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
 const TableRow = styled.div`
@@ -18,7 +19,7 @@ class Equity extends Component {
       symbol: '',
       price: '',
       eps: '',
-      pe: '',
+      futPe: '',
       growth: '',
       mos: '',
     };
@@ -28,7 +29,7 @@ class Equity extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    return {symbol: props.symbol.toUpperCase(), pe: props.futpe, growth: props.growth};
+    return { symbol: props.symbol.toUpperCase(), futPe: props.futPe, growth: props.growth };
   }
 
   componentDidMount() {
@@ -39,9 +40,10 @@ class Equity extends Component {
     // calculates margin of safety and updates state object
     let x = 1 + parseFloat(this.state.growth) / 100;
     let futEps = this.state.eps * Math.pow(x, 10);
-    let futPe = this.state.pe;
-    let Mos = this.state.price / ((futEps * futPe) / 4); //;
-    this.setState({mos: Mos.toFixed(2)});
+    let futPe = this.state.futPe;
+    let Mos = ((this.state.price / ((futEps * futPe) / 4)) * 100).toFixed(2); //;
+    console.log(Mos);
+    this.setState({ mos: Mos });
   }
 
   getData() {
@@ -70,11 +72,16 @@ class Equity extends Component {
       <TableRow>
         <TableCell>{this.state.symbol}</TableCell>
         <TableCell>{this.state.price}</TableCell>
-        <TableCell>{this.state.pe}</TableCell>
+        <TableCell>{this.state.futPe}</TableCell>
         <TableCell>{this.state.eps}</TableCell>
         <TableCell>{this.state.growth}%</TableCell>
-        <TableCell>{this.state.mos * 100}%</TableCell>
+        <TableCell>{this.state.mos}%</TableCell>
+        <TableCell>
+          <Button onClick={this.props.edit}>Edit</Button>
+        </TableCell>
       </TableRow>
+
+
     );
   }
 }

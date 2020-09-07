@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Equity from './EquityComponent';
+import EquityUpdateModal from './EquityUpdateComponent';
 import styled from 'styled-components';
-import {Row, Col, Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
+import ls from 'local-storage';
+import { Row, Col, Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody, } from 'reactstrap';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -43,17 +45,11 @@ const Error = styled.p`
 `;
 
 const initialState = {
-  equity: {
-    symbol: '',
-    growth: '',
-    futpe: '',
-  },
+  equityAdd: {},
+  equityEdit: {},
   watchlist: [],
-  errors: {
-    symbol: '',
-    growth: '',
-    futpe: '',
-  },
+  errors: {},
+  isModalOpen: false,
 };
 
 class WishList extends Component {
@@ -63,19 +59,45 @@ class WishList extends Component {
     this.state = initialState;
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleAddChange = this.handleAddChange.bind(this);
+    this.handleEditChange = this.handleEditChange.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
     this.validate = this.validate.bind(this);
     this.handleClear = this.handleClear.bind(this);
   }
 
-  handleChange(event) {
+  // componentDidlMount() {
+  //   // get watchlist from local storage
+  //   this.setState({ watchlist: JSON.parse(ls.get('watchlist')) || [] });
+  // }
+
+  handleAddChange(event) {
     const input = event.target;
-    const newEquity = this.state.equity;
     const field = input.name;
+    const newEquity = this.state.equityAdd;
     this.validate(input);
     // make copy of 'Equity' and modify it before updating state
     newEquity[field] = input.value;
-    this.setState({equity: newEquity});
+    this.setState({ equityAdd: newEquity }, () => {
+      console.log("HandleAddChange");
+      console.log(this.state);
+    });
+  }
+
+  handleEditChange(event) {
+    const input = event.target;
+    const field = input.name;
+    const newEquity = this.state.equityEdit;
+    this.validate(input);
+    // make copy of 'Equity' and modify it before updating state
+    newEquity[field] = input.value;
+    this.setState({ equityAdd: newEquity }, () => {
+      console.log("HandleEditChange");
+      console.log(this.state);
+    });
   }
 
   validate(input) {
@@ -83,63 +105,105 @@ class WishList extends Component {
 
     switch (input.name) {
       case 'symbol':
-        // check if equity already exists in watchlist
+        input.value = input.value.toUpperCase();
+        // check if equity is already in watchlist
+        let symbolDuplicates = 0;
         this.state.watchlist.forEach((e) => {
-          if (e.symbol === input.value) {
-            newErrors[input.name] = 'Equity already exists';
-            console.log('equity already exists');
-          }
+          if (e.symbol == input.value) symbolDuplicates++;
         });
+        if (symbolDuplicates > 0) {
+          newErrors[input.name] = 'Equity already exists';
+        } else delete newErrors[input.name];
         break;
-      case 'futpPe':
+      case 'futPe':
         if (isNaN(input.value)) {
-          newErrors[input.name] = 'Please enter a valid price';
-        } else newErrors = {};
+          newErrors[input.name] = 'Please enter a valid number';
+        } else delete newErrors[input.name];
         break;
       case 'growth':
         if (isNaN(input.value)) {
-          newErrors[input.name] = 'Please enter a valid price';
-        } else newErrors = {};
+          newErrors[input.name] = 'Please enter a valid number';
+        } else delete newErrors[input.name];
         break;
       default:
-        this.setState({errors: initialState.errors});
+        this.setState({ errors: initialState.errors });
         newErrors = {};
     }
-    this.setState({errors: newErrors});
+    this.setState({ errors: newErrors }, () => { console.log(this.state.errors) });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-
-    let list = this.state.watchlist.concat(this.state.equity);
+    let list = this.state.watchlist.concat(this.state.equityAdd);
+    ls.set('watchlist', JSON.stringify(list)); // update localStorage
     this.setState(
       {
-        equity: {
-          symbol: '',
-          growth: '',
-          futPe: '',
-        },
+        equityAdd: {},
         watchlist: list,
-        errors: {
-          symbol: '',
-          growth: '',
-          futPe: '',
-        },
-      },
-      () => {
-        console.log(this.state);
+        errors: {},
       }
     );
   }
 
   handleClear() {
-    this.setState({equity: initialState.equity});
+    // copy current state, clear equity, then re-set
+    let newState = this.state;
+    newState.equity = {
+      symbol: '',
+      growth: '',
+      futPe: '',
+    };
+    newState.errors = {};
+    this.setState(newState);
+  }
+
+  handleEdit(equity) {
+    this.toggleModal();
+    // update equity to edit in state
+    this.setState({ equityEdit: equity })
+    console.log("Equity Clicked");
+  }
+
+  handleUpdate() {
+    // find index of equity
+    let equityIndex = this.state.watchlist.findIndex((equityItem) => {
+      return equityItem.symbol === this.state.equityEdit.symbol
+    })
+    // update equity in watchlist copy
+    let newWatchlist = this.state.watchlist
+    newWatchlist[equityIndex].futPe = this.state.equityEdit.futPe;
+    newWatchlist[equityIndex].growth = this.state.equityEdit.growth;
+    // update state
+    this.setState({ watchlist: newWatchlist })
+    ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
+    this.toggleModal();
+  }
+
+  handleDelete() {
+    let equity = this.state.equityEdit
+    // Filter and remove equity from watchlist
+    let newWatchlist = this.state.watchlist.filter((equityItem) => {
+      return equityItem.symbol.toUpperCase() !== equity.symbol.toUpperCase();
+    });
+    this.setState({ watchlist: newWatchlist })
+    ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
+    this.toggleModal();
+  }
+
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    });
   }
 
   render() {
+    // check if errors are empty to enable form submission
+    const isEnabled = Object.keys(this.state.errors).length === 0;
+    console.log("Render");
+    console.log(this.state.watchlist);
     return (
       <Container>
-        <h1>Wish List</h1>
+        <h1>Watch List</h1>
         <h4>
           <a href="/home">Home</a>
         </h4>
@@ -157,8 +221,10 @@ class WishList extends Component {
             <TableHead>MOS</TableHead>
           </TableHeading>
           <TableBody>
-            {this.state.watchlist.map((equity, i) => {
-              return <Equity symbol={equity.symbol} growth={equity.growth} futpe={equity.futPe} key={i} />;
+            {this.state.watchlist.map((equity) => {
+              return (
+                <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEdit.bind(null, equity)} />
+              );
             })}
           </TableBody>
         </Table>
@@ -172,7 +238,7 @@ class WishList extends Component {
                 Symbol
               </Label>
               <InputGroup className="col-6">
-                <Input required type="text" name="symbol" value={this.state.symbol} onChange={this.handleChange} step=".01"></Input>
+                <Input required type="text" name="symbol" value={this.state.equityAdd.symbol} onChange={this.handleAddChange} step=".01"></Input>
               </InputGroup>
             </FormGroup>
             <Error>{this.state.errors.symbol}</Error>
@@ -182,7 +248,7 @@ class WishList extends Component {
                 Future P/E
               </Label>
               <InputGroup className="col-6">
-                <Input required type="text" name="futPe" value={this.state.futPe} onChange={this.handleChange} step=".01"></Input>
+                <Input required type="text" name="futPe" value={this.state.equityAdd.futPe} onChange={this.handleAddChange} step=".01"></Input>
               </InputGroup>
             </FormGroup>
             <Error>{this.state.errors.futPe}</Error>
@@ -192,7 +258,7 @@ class WishList extends Component {
                 Projected Growth
               </Label>
               <InputGroup className="col-6">
-                <Input required type="text" name="growth" maxLength="2" value={this.state.growth} onChange={this.handleChange}></Input>
+                <Input required type="text" name="growth" maxLength="2" value={this.state.equityAdd.growth} onChange={this.handleAddChange}></Input>
                 <InputGroupAddon addonType="append">
                   <InputGroupText>%</InputGroupText>
                 </InputGroupAddon>
@@ -201,7 +267,7 @@ class WishList extends Component {
             <Error>{this.state.errors.growth}</Error>
 
             <FormGroup row className="justify-content-center">
-              <Button type="submit" className="m-4 btn btn-success" mt={4}>
+              <Button type="submit" disabled={!isEnabled} className="m-4 btn btn-success" mt={4}>
                 Add
               </Button>
               <Button className="m-4 btn btn-secondary" onClick={this.handleClear}>
@@ -210,6 +276,17 @@ class WishList extends Component {
             </FormGroup>
           </Form>
         </FormContainer>
+
+        <EquityUpdateModal
+          symbol={this.state.equityEdit.symbol}
+          futPe={this.state.equityEdit.futPe}
+          growth={this.state.equityEdit.growth}
+          onChange={this.handleEditChange}
+          onUpdate={this.handleUpdate}
+          onDelete={this.handleDelete}
+          onModal={this.toggleModal}
+          modalStatus={this.state.isModalOpen} />
+
       </Container>
     );
   }

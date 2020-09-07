@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import {Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input} from 'reactstrap';
+import { Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input } from 'reactstrap';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -69,13 +69,13 @@ class TradeCalc extends Component {
     const input = event.target;
     const field = input.name;
     this.validate(input);
-    this.setState({[field]: input.value}, () => {
+    this.setState({ [field]: input.value }, () => {
       console.log(JSON.stringify(this.state));
       // Check if we have price and share count to calculate amount traded
       if (this.state.shares !== '' && this.state.purchasePrice !== '') {
         console.log('IF condition validated');
-        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        this.setState({amountTraded: traded}, () => {
+        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        this.setState({ amountTraded: traded }, () => {
           console.log(JSON.stringify(this.state));
         });
       }
@@ -90,38 +90,38 @@ class TradeCalc extends Component {
         if (isNaN(input.value)) {
           console.log('Input value: ' + input.value);
           newErrors.shares = 'Please enter a valid number';
-        } else newErrors = {};
+        } else delete newErrors[input.name];
         break;
       case 'purchasePrice':
         if (isNaN(input.value)) {
           newErrors[input.name] = 'Please enter a valid price';
-        } else newErrors = {};
+        } else delete newErrors[input.name];
         break;
       case 'salePrice':
         if (isNaN(input.value)) {
           newErrors[input.name] = 'Please enter a valid price';
-        } else newErrors = {};
+        } else delete newErrors[input.name];
         break;
       case 'commission':
         if (isNaN(input.value)) {
           newErrors[input.name] = 'Please enter a valid price';
-        } else newErrors = {};
+        } else delete newErrors[input.name];
         break;
       case 'incomeTax':
         if (isNaN(input.value)) {
           newErrors[input.name] = 'Please enter a valid tax rate';
-        } else newErrors = {};
+        } else delete newErrors[input.name];
         break;
       case 'capitalGainsTax':
         if (isNaN(input.value)) {
           newErrors[input.name] = 'Please enter a valid tax rate';
-        } else newErrors = {};
+        } else delete newErrors[input.name];
         break;
       default:
-        this.setState({errors: initialState.errors});
+        this.setState({ errors: initialState.errors });
         newErrors = {};
     }
-    this.setState({errors: newErrors});
+    this.setState({ errors: newErrors });
   }
 
   handleSubmit(event) {
@@ -133,18 +133,13 @@ class TradeCalc extends Component {
     let longTermNet = this.toNumber(this.state.amountTraded) * (gain / 100) * ((100 - this.state.capitalGainsTax) / 100);
     let longTermGain = (longTermNet / this.toNumber(this.state.amountTraded)) * 100;
 
-    console.log('traded: ' + this.toNumber(this.state.amountTraded));
-    console.log('gain: ' + parseFloat(gain));
-    console.log('gain: ' + gain);
-    console.log('incomeTax: ' + this.state.incomeTax);
-
     this.setState(
       {
-        gain: gain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        shortTermGain: shortTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        shortTermNet: shortTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        longTermGain: longTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        longTermNet: longTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        gain: gain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        shortTermGain: shortTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        shortTermNet: shortTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        longTermGain: longTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        longTermNet: longTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       },
       () => {
         this.toggleModal();
@@ -170,6 +165,8 @@ class TradeCalc extends Component {
   }
 
   render() {
+    // check if errors are empty to enable form submission
+    const isEnabled = Object.keys(this.state.errors).length === 0;
     return (
       <Container>
         <div>
@@ -311,7 +308,7 @@ class TradeCalc extends Component {
             </FormGroup>
 
             <FormGroup className="mb-0 mx-0 d-flex justify-content-center" row>
-              <Button className="m-4 btn btn-success" type="submit">
+              <Button disabled={!isEnabled} className="m-4 btn btn-success" type="submit">
                 Calculate
               </Button>
               <Button className="m-4 btn btn-secondary" onClick={this.handleClear}>
@@ -323,7 +320,7 @@ class TradeCalc extends Component {
 
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal} className="justify-content-center">
-            Trade
+
           </ModalHeader>
           <ModalBody>
             <Row>
