@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Equity from './EquityComponent';
 import EquityUpdateModal from './EquityUpdateComponent';
 import styled from 'styled-components';
 import ls from 'local-storage';
-import { Row, Col, Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody, } from 'reactstrap';
+import {Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -69,10 +69,10 @@ class WishList extends Component {
     this.handleClear = this.handleClear.bind(this);
   }
 
-  // componentDidlMount() {
-  //   // get watchlist from local storage
-  //   this.setState({ watchlist: JSON.parse(ls.get('watchlist')) || [] });
-  // }
+  componentDidMount() {
+    // get watchlist from local storage
+    this.setState({watchlist: JSON.parse(ls.get('watchlist')) || []});
+  }
 
   handleAddChange(event) {
     const input = event.target;
@@ -81,8 +81,8 @@ class WishList extends Component {
     this.validate(input);
     // make copy of 'Equity' and modify it before updating state
     newEquity[field] = input.value;
-    this.setState({ equityAdd: newEquity }, () => {
-      console.log("HandleAddChange");
+    this.setState({equityAdd: newEquity}, () => {
+      console.log('HandleAddChange');
       console.log(this.state);
     });
   }
@@ -94,8 +94,8 @@ class WishList extends Component {
     this.validate(input);
     // make copy of 'Equity' and modify it before updating state
     newEquity[field] = input.value;
-    this.setState({ equityAdd: newEquity }, () => {
-      console.log("HandleEditChange");
+    this.setState({equityEdit: newEquity}, () => {
+      console.log('HandleEditChange');
       console.log(this.state);
     });
   }
@@ -109,7 +109,7 @@ class WishList extends Component {
         // check if equity is already in watchlist
         let symbolDuplicates = 0;
         this.state.watchlist.forEach((e) => {
-          if (e.symbol == input.value) symbolDuplicates++;
+          if (e.symbol === input.value) symbolDuplicates++;
         });
         if (symbolDuplicates > 0) {
           newErrors[input.name] = 'Equity already exists';
@@ -125,22 +125,43 @@ class WishList extends Component {
           newErrors[input.name] = 'Please enter a valid number';
         } else delete newErrors[input.name];
         break;
+      case 'futPeEdit':
+        if (isNaN(input.value)) {
+          newErrors[input.name] = 'Please enter a valid number';
+        } else delete newErrors[input.name];
+        break;
+      case 'growthEdit':
+        if (isNaN(input.value)) {
+          newErrors[input.name] = 'Please enter a valid number';
+        } else delete newErrors[input.name];
+        break;
       default:
-        this.setState({ errors: initialState.errors });
+        this.setState({errors: initialState.errors});
         newErrors = {};
     }
-    this.setState({ errors: newErrors }, () => { console.log(this.state.errors) });
+    this.setState({errors: newErrors}, () => {
+      console.log(this.state.errors);
+    });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    let newEquity = this.state.equityAdd;
     let list = this.state.watchlist.concat(this.state.equityAdd);
     ls.set('watchlist', JSON.stringify(list)); // update localStorage
+    newEquity = {
+      symbol: '',
+      growth: '',
+      futPe: '',
+    };
     this.setState(
       {
-        equityAdd: {},
+        equityAdd: newEquity,
         watchlist: list,
         errors: {},
+      },
+      () => {
+        console.log(this.state);
       }
     );
   }
@@ -148,7 +169,7 @@ class WishList extends Component {
   handleClear() {
     // copy current state, clear equity, then re-set
     let newState = this.state;
-    newState.equity = {
+    newState.equityAdd = {
       symbol: '',
       growth: '',
       futPe: '',
@@ -160,32 +181,32 @@ class WishList extends Component {
   handleEdit(equity) {
     this.toggleModal();
     // update equity to edit in state
-    this.setState({ equityEdit: equity })
-    console.log("Equity Clicked");
+    this.setState({equityEdit: equity});
+    console.log('Equity Clicked');
   }
 
   handleUpdate() {
     // find index of equity
     let equityIndex = this.state.watchlist.findIndex((equityItem) => {
-      return equityItem.symbol === this.state.equityEdit.symbol
-    })
+      return equityItem.symbol === this.state.equityEdit.symbol;
+    });
     // update equity in watchlist copy
-    let newWatchlist = this.state.watchlist
+    let newWatchlist = this.state.watchlist;
     newWatchlist[equityIndex].futPe = this.state.equityEdit.futPe;
     newWatchlist[equityIndex].growth = this.state.equityEdit.growth;
     // update state
-    this.setState({ watchlist: newWatchlist })
+    this.setState({watchlist: newWatchlist});
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
     this.toggleModal();
   }
 
   handleDelete() {
-    let equity = this.state.equityEdit
+    let equity = this.state.equityEdit;
     // Filter and remove equity from watchlist
     let newWatchlist = this.state.watchlist.filter((equityItem) => {
       return equityItem.symbol.toUpperCase() !== equity.symbol.toUpperCase();
     });
-    this.setState({ watchlist: newWatchlist })
+    this.setState({watchlist: newWatchlist});
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
     this.toggleModal();
   }
@@ -199,8 +220,9 @@ class WishList extends Component {
   render() {
     // check if errors are empty to enable form submission
     const isEnabled = Object.keys(this.state.errors).length === 0;
-    console.log("Render");
+    console.log('Render');
     console.log(this.state.watchlist);
+    console.log(ls.get('watchlist'));
     return (
       <Container>
         <h1>Watch List</h1>
@@ -221,10 +243,8 @@ class WishList extends Component {
             <TableHead>MOS</TableHead>
           </TableHeading>
           <TableBody>
-            {this.state.watchlist.map((equity) => {
-              return (
-                <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEdit.bind(null, equity)} />
-              );
+            {this.state.watchlist.map((equity, i) => {
+              return <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEdit.bind(null, equity)} key={i} />;
             })}
           </TableBody>
         </Table>
@@ -285,8 +305,8 @@ class WishList extends Component {
           onUpdate={this.handleUpdate}
           onDelete={this.handleDelete}
           onModal={this.toggleModal}
-          modalStatus={this.state.isModalOpen} />
-
+          modalStatus={this.state.isModalOpen}
+        />
       </Container>
     );
   }
