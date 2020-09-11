@@ -1,6 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import {Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input} from 'reactstrap';
+import LinkButton from './LinkButtonComponent';
+import { Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input } from 'reactstrap';
+import { Theme } from './theme';
+
+const LinkColor = '#444444';
 
 const Container = styled.div`
   max-width: 1200px;
@@ -69,13 +73,13 @@ class TradeCalc extends Component {
     const input = event.target;
     const field = input.name;
     this.validate(input);
-    this.setState({[field]: input.value}, () => {
+    this.setState({ [field]: input.value }, () => {
       console.log(JSON.stringify(this.state));
       // Check if we have price and share count to calculate amount traded
       if (this.state.shares !== '' && this.state.purchasePrice !== '') {
         console.log('IF condition validated');
-        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        this.setState({amountTraded: traded}, () => {
+        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        this.setState({ amountTraded: traded }, () => {
           console.log(JSON.stringify(this.state));
         });
       }
@@ -118,10 +122,10 @@ class TradeCalc extends Component {
         } else delete newErrors[input.name];
         break;
       default:
-        this.setState({errors: initialState.errors});
+        this.setState({ errors: initialState.errors });
         newErrors = {};
     }
-    this.setState({errors: newErrors});
+    this.setState({ errors: newErrors });
   }
 
   handleSubmit(event) {
@@ -135,11 +139,11 @@ class TradeCalc extends Component {
 
     this.setState(
       {
-        gain: gain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        shortTermGain: shortTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        shortTermNet: shortTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        longTermGain: longTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-        longTermNet: longTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        gain: gain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        shortTermGain: shortTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        shortTermNet: shortTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        longTermGain: longTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        longTermNet: longTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       },
       () => {
         this.toggleModal();
@@ -171,12 +175,7 @@ class TradeCalc extends Component {
       <Container>
         <div>
           <h1>Trade Calculator</h1>
-          <h4>
-            <a href="/home">Home</a>
-          </h4>
-          <h4>
-            <a href="/wish-list">Wish List</a>
-          </h4>
+          <LinkButton href="/home" text="Home" color={Theme.textLight} colorBg={Theme.secondary} />
         </div>
 
         <FormContainer>

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import {Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody} from 'reactstrap';
+import { Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 const Error = styled.p`
   color: red;
@@ -11,10 +11,8 @@ const Error = styled.p`
 `;
 
 const initialState = {
-  errors: {
-    futPe: '',
-    growth: '',
-  },
+  equity: {},
+  errors: {},
 };
 
 class EquityUpdateModal extends Component {
@@ -23,17 +21,25 @@ class EquityUpdateModal extends Component {
 
     this.state = initialState;
 
+    this.handleEditChange = this.handleEditChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  static getDerivedStateFromProps(props) {
+    return { equity: props.equity };
+  }
+
+  handleEditChange(event) {
     const input = event.target;
     const field = input.name;
-    const newEquity = this.state.equityAdd;
+    const newEquity = this.props.equity;
     this.validate(input);
     // make copy of 'Equity' and modify it before updating state
     newEquity[field] = input.value;
-    this.setState({equityAdd: newEquity}, () => {});
+    this.setState({ equity: newEquity }, () => {
+      console.log('HandleEditChange');
+      console.log(this.state);
+    });
   }
 
   validate(input) {
@@ -51,16 +57,19 @@ class EquityUpdateModal extends Component {
         } else delete newErrors[input.name];
         break;
       default:
-        this.setState({errors: {}});
+        this.setState({ errors: {} });
         newErrors = {};
     }
-    this.setState({errors: newErrors}, () => {
+    this.setState({ errors: newErrors }, () => {
       console.log(this.state.errors);
     });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    this.props.onUpdate(this.state.equity);
+    console.log('HandleSubmit');
+    console.log(this.state.equity);
   }
 
   render() {
@@ -68,7 +77,7 @@ class EquityUpdateModal extends Component {
     const isEnabled = Object.keys(this.state.errors).length === 0;
     return (
       <Modal isOpen={this.props.modalStatus} toggle={this.props.onModal}>
-        <ModalHeader className="justify-content-center">{this.props.symbol}</ModalHeader>
+        <ModalHeader className="justify-content-center">{this.props.equity.symbol}</ModalHeader>
         <ModalBody>
           <Form onSubmit={this.handleSubmit}>
             <FormText m={5} className="justify-content-center">
@@ -79,29 +88,29 @@ class EquityUpdateModal extends Component {
                 Future P/E
               </Label>
               <InputGroup className="col-6">
-                <Input required type="text" name="futPe" value={this.props.futPe} onChange={this.props.onChange} step=".01"></Input>
+                <Input required type="text" name="futPe" value={this.props.equity.futPe} onChange={this.handleEditChange} step=".01"></Input>
               </InputGroup>
             </FormGroup>
-            <Error>{this.state.errors.futPeEdit}</Error>
+            <Error>{this.state.errors.futPe}</Error>
 
             <FormGroup className="mb-0" row>
               <Label for="growth" xs={6}>
                 Projected Growth
               </Label>
               <InputGroup className="col-6">
-                <Input required type="text" name="growth" maxLength="2" value={this.props.growth} onChange={this.props.onChange}></Input>
+                <Input required type="text" name="growth" maxLength="2" value={this.props.equity.growth} onChange={this.handleEditChange}></Input>
                 <InputGroupAddon addonType="append">
                   <InputGroupText>%</InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
             </FormGroup>
-            <Error>{this.state.errors.growthEdit}</Error>
+            <Error>{this.state.errors.growth}</Error>
 
             <FormGroup row className="justify-content-center">
-              <Button type="submit" disabled={!isEnabled} className="m-4 btn btn-success" onClick={this.props.onUpdate}>
+              <Button type="submit" disabled={!isEnabled} className="m-4 btn btn-success" onClick={this.handleSubmit}>
                 Update
               </Button>
-              <Button className="m-4 btn btn-secondary" onClick={this.props.onModal}>
+              <Button className="m-4 btn btn-secondary" onClick={this.props.onCancel}>
                 Cancel
               </Button>
               <Button className="m-4 btn btn-danger" onClick={this.props.onDelete}>

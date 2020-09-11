@@ -1,30 +1,40 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Equity from './EquityComponent';
 import EquityUpdateModal from './EquityUpdateComponent';
+import LinkButton from './LinkButtonComponent';
 import styled from 'styled-components';
 import ls from 'local-storage';
-import {Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
+import { Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
+import { size } from './device';
+import { Theme } from './theme';
+
 
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: ${size.tablet};
   margin: 0 auto;
 `;
 
 const Table = styled.div`
   display: table;
-  width: 90%;
+  width: 100%;
   margin: 0 auto 5rem auto;
 `;
 
 const TableHeading = styled.div`
   display: table-header-group;
-  background-color: #ddd;
   font-weight: bold;
 `;
+
 const TableHead = styled.div`
+  font-size: 0.8rem;
   display: table-cell;
-  padding: 3px 10px;
-  border: 1px solid #999999;
+  padding: 10px 10px;
+  text-align: right;
+  border-bottom: 1px solid #999999;
+`;
+
+const TableHeadLeft = styled(TableHead)`
+  text-align: left;
 `;
 
 const TableBody = styled.div`
@@ -45,7 +55,18 @@ const Error = styled.p`
 `;
 
 const initialState = {
-  equityAdd: {},
+  equityAdd: {
+    symbol: '',
+    futPe: '',
+    growth: '',
+
+    pe: '',
+    eps: ``,
+    price: ``,
+    sticker: ``,
+    mos: ``,
+
+  },
   equityEdit: {},
   watchlist: [],
   errors: {},
@@ -60,8 +81,7 @@ class WishList extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAddChange = this.handleAddChange.bind(this);
-    this.handleEditChange = this.handleEditChange.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
+    this.handleEditClick = this.handleEditClick.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -69,9 +89,13 @@ class WishList extends Component {
     this.handleClear = this.handleClear.bind(this);
   }
 
+  history() {
+
+  }
+
   componentDidMount() {
     // get watchlist from local storage
-    this.setState({watchlist: JSON.parse(ls.get('watchlist')) || []});
+    this.setState({ watchlist: JSON.parse(ls.get('watchlist')) || [] });
   }
 
   handleAddChange(event) {
@@ -81,23 +105,11 @@ class WishList extends Component {
     this.validate(input);
     // make copy of 'Equity' and modify it before updating state
     newEquity[field] = input.value;
-    this.setState({equityAdd: newEquity}, () => {
+    this.setState({ equityAdd: newEquity }, () => {
       console.log('HandleAddChange');
       console.log(this.state);
     });
-  }
 
-  handleEditChange(event) {
-    const input = event.target;
-    const field = input.name;
-    const newEquity = this.state.equityEdit;
-    this.validate(input);
-    // make copy of 'Equity' and modify it before updating state
-    newEquity[field] = input.value;
-    this.setState({equityEdit: newEquity}, () => {
-      console.log('HandleEditChange');
-      console.log(this.state);
-    });
   }
 
   validate(input) {
@@ -125,21 +137,11 @@ class WishList extends Component {
           newErrors[input.name] = 'Please enter a valid number';
         } else delete newErrors[input.name];
         break;
-      case 'futPeEdit':
-        if (isNaN(input.value)) {
-          newErrors[input.name] = 'Please enter a valid number';
-        } else delete newErrors[input.name];
-        break;
-      case 'growthEdit':
-        if (isNaN(input.value)) {
-          newErrors[input.name] = 'Please enter a valid number';
-        } else delete newErrors[input.name];
-        break;
       default:
-        this.setState({errors: initialState.errors});
+        this.setState({ errors: initialState.errors });
         newErrors = {};
     }
-    this.setState({errors: newErrors}, () => {
+    this.setState({ errors: newErrors }, () => {
       console.log(this.state.errors);
     });
   }
@@ -149,11 +151,7 @@ class WishList extends Component {
     let newEquity = this.state.equityAdd;
     let list = this.state.watchlist.concat(this.state.equityAdd);
     ls.set('watchlist', JSON.stringify(list)); // update localStorage
-    newEquity = {
-      symbol: '',
-      growth: '',
-      futPe: '',
-    };
+    newEquity = {};
     this.setState(
       {
         equityAdd: newEquity,
@@ -178,24 +176,29 @@ class WishList extends Component {
     this.setState(newState);
   }
 
-  handleEdit(equity) {
+  handleEditClick(equity) {
+    // open equity update modal
     this.toggleModal();
-    // update equity to edit in state
-    this.setState({equityEdit: equity});
+    this.setState({ equityEdit: equity });
     console.log('Equity Clicked');
   }
 
-  handleUpdate() {
+  handleUpdate(equity) {
+
+    console.log('Equity');
+    console.log(equity);
     // find index of equity
     let equityIndex = this.state.watchlist.findIndex((equityItem) => {
-      return equityItem.symbol === this.state.equityEdit.symbol;
+      return equityItem.symbol === equity.symbol;
     });
     // update equity in watchlist copy
     let newWatchlist = this.state.watchlist;
-    newWatchlist[equityIndex].futPe = this.state.equityEdit.futPe;
-    newWatchlist[equityIndex].growth = this.state.equityEdit.growth;
+    //console.log(newWatchlist[equityIndex].futPe);
+    console.log(newWatchlist);
+    newWatchlist[equityIndex].futPe = equity.futPe;
+    newWatchlist[equityIndex].growth = equity.growth;
     // update state
-    this.setState({watchlist: newWatchlist});
+    this.setState({ watchlist: newWatchlist });
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
     this.toggleModal();
   }
@@ -206,7 +209,7 @@ class WishList extends Component {
     let newWatchlist = this.state.watchlist.filter((equityItem) => {
       return equityItem.symbol.toUpperCase() !== equity.symbol.toUpperCase();
     });
-    this.setState({watchlist: newWatchlist});
+    this.setState({ watchlist: newWatchlist });
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
     this.toggleModal();
   }
@@ -226,25 +229,19 @@ class WishList extends Component {
     return (
       <Container>
         <h1>Watch List</h1>
-        <h4>
-          <a href="/home">Home</a>
-        </h4>
-        <h4>
-          <a href="/trade-calc">Trade Calculator</a>
-        </h4>
-        <h6>Easily keep track of you favorite stocks and see when it's time to buy!</h6>
+        <LinkButton href="/home" text="Home" color={Theme.textLight} colorBg={Theme.secondary} />
+
         <Table>
           <TableHeading>
-            <TableHead>Symbol</TableHead>
+            <TableHeadLeft>List</TableHeadLeft>
+            <TableHead>Data</TableHead>
             <TableHead>Price</TableHead>
-            <TableHead>P/E</TableHead>
-            <TableHead>EPS</TableHead>
-            <TableHead>Growth</TableHead>
-            <TableHead>MOS</TableHead>
+            <TableHead>M.O.S.</TableHead>
           </TableHeading>
           <TableBody>
             {this.state.watchlist.map((equity, i) => {
-              return <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEdit.bind(null, equity)} key={i} />;
+              console.log('equity: ' + i);
+              return <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEditClick.bind(null, equity)} key={i} index={i} />;
             })}
           </TableBody>
         </Table>
@@ -298,15 +295,13 @@ class WishList extends Component {
         </FormContainer>
 
         <EquityUpdateModal
-          symbol={this.state.equityEdit.symbol}
-          futPe={this.state.equityEdit.futPe}
-          growth={this.state.equityEdit.growth}
-          onChange={this.handleEditChange}
+          equity={this.state.equityEdit}
           onUpdate={this.handleUpdate}
-          onDelete={this.handleDelete}
-          onModal={this.toggleModal}
-          modalStatus={this.state.isModalOpen}
+          onDelete={this.handleDelete}  // works
+          onCancel={this.toggleModal}  // works
+          modalStatus={this.state.isModalOpen}  // works
         />
+
       </Container>
     );
   }
