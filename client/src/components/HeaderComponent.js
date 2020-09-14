@@ -1,23 +1,50 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import { Theme } from './theme';
+import LogoIcon from './LogoIconComponent';
+import {Theme} from './theme';
+import {device} from './device';
 
 const AppHeader = styled.div`
+  font-family: ${Theme.fontPrimary};
   background-color: ${Theme.primary};
-  min-height: 10vh;
+  height: 8vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: ${Theme.light};
+  @media ${device.tablet} {
+    height: 13vh;
+  }
+`;
+
+const HeaderText = styled.h2`
+  margin: 0 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${Theme.textLight};
+  @media ${device.tablet} {
+    margin: 0 3rem;
+    font-size: 1.5rem;
+  }
+`;
+
+const IconWrapper = styled.div`
+  height: 50px;
+  width: 50px;
+  display: block;
+  @media ${device.tablet} {
+    height: 75px;
+    width: 75px;
+  }
 `;
 
 class Header extends Component {
   render() {
     return (
       <AppHeader>
-        <h1>Stock Analyzer</h1>
+        <IconWrapper>
+          <LogoIcon fillLine={Theme.light} fillBars="gray" fillBorder={Theme.trim} />
+        </IconWrapper>
+        <HeaderText>Stock Analyzer</HeaderText>
       </AppHeader>
     );
   }

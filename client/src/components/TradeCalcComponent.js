@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
+import FormButton from './FormButtonComponent';
 import LinkButton from './LinkButtonComponent';
-import { Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input } from 'reactstrap';
-import { Theme } from './theme';
+import {Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input} from 'reactstrap';
+import {Theme} from './theme';
 
 const LinkColor = '#444444';
 
@@ -73,13 +74,13 @@ class TradeCalc extends Component {
     const input = event.target;
     const field = input.name;
     this.validate(input);
-    this.setState({ [field]: input.value }, () => {
+    this.setState({[field]: input.value}, () => {
       console.log(JSON.stringify(this.state));
       // Check if we have price and share count to calculate amount traded
       if (this.state.shares !== '' && this.state.purchasePrice !== '') {
         console.log('IF condition validated');
-        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        this.setState({ amountTraded: traded }, () => {
+        let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        this.setState({amountTraded: traded}, () => {
           console.log(JSON.stringify(this.state));
         });
       }
@@ -122,10 +123,10 @@ class TradeCalc extends Component {
         } else delete newErrors[input.name];
         break;
       default:
-        this.setState({ errors: initialState.errors });
+        this.setState({errors: initialState.errors});
         newErrors = {};
     }
-    this.setState({ errors: newErrors });
+    this.setState({errors: newErrors});
   }
 
   handleSubmit(event) {
@@ -139,11 +140,11 @@ class TradeCalc extends Component {
 
     this.setState(
       {
-        gain: gain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        shortTermGain: shortTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        shortTermNet: shortTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        longTermGain: longTermGain.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        longTermNet: longTermNet.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        gain: gain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        shortTermGain: shortTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        shortTermNet: shortTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        longTermGain: longTermGain.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+        longTermNet: longTermNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
       },
       () => {
         this.toggleModal();
@@ -175,7 +176,7 @@ class TradeCalc extends Component {
       <Container>
         <div>
           <h1>Trade Calculator</h1>
-          <LinkButton href="/home" text="Home" color={Theme.textLight} colorBg={Theme.secondary} />
+          <LinkButton href="/home" text="< Home" color={Theme.textLight} colorBg={Theme.secondary} margin="1rem" height="38px" width="80px" fontSize="1rem" />
         </div>
 
         <FormContainer>
@@ -307,18 +308,33 @@ class TradeCalc extends Component {
             </FormGroup>
 
             <FormGroup className="mb-0 mx-0 d-flex justify-content-center" row>
-              <Button disabled={!isEnabled} className="m-4 btn btn-success" type="submit">
-                Calculate
-              </Button>
-              <Button className="m-4 btn btn-secondary" onClick={this.handleClear}>
-                Clear Fields
-              </Button>
+              <FormButton
+                type="submit"
+                disabled={!isEnabled}
+                margin="2rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.secondary}
+                height="3rem"
+                text="Calculate"
+              />
+              <FormButton
+                onClick={this.handleClear}
+                margin="2rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.cancel}
+                height="3rem"
+                text="Clear Fields"
+              />
             </FormGroup>
           </Form>
         </FormContainer>
 
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal} className="justify-content-center"></ModalHeader>
+          <ModalHeader toggle={this.toggleModal} className="justify-content-center">
+            {this.state.symbol}
+          </ModalHeader>
           <ModalBody>
             <Row>
               <Col m="3">Amount Traded</Col>
@@ -345,9 +361,16 @@ class TradeCalc extends Component {
               <Col>${this.state.longTermNet}</Col>
             </Row>
             <Row className="my-4 d-flex justify-content-center">
-              <Button type="submit" value="submit" color="primary" onClick={this.toggleModal}>
-                Go Back
-              </Button>
+              <FormButton
+                type="submit"
+                onClick={this.toggleModal}
+                margin="2rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.cancel}
+                height="3rem"
+                text="Go Back"
+              />
             </Row>
           </ModalBody>
         </Modal>

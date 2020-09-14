@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import { size, device } from './device';
+import { Theme } from './theme';
 
 const TableRow = styled.div`
   display: table-row;
   height: 3rem;
-  background-color: ${props => props.index % 2 === 0 ? '#efefef' : 'white'};
+  background-color: ${props => props.index % 2 === 0 ? Theme.light : 'white'};
 `;
 
 const TableCell = styled.div`
@@ -50,12 +51,12 @@ const EditButton = styled.div`
   background-color: gray;
   font-size: .5rem;
   margin: 0.5rem 0 0 auto; 
-  color: white;
+  color: ${Theme.textLight};
   font-weight: 700;
   text-align: center;
   &:hover {
     cursor: pointer;
-    background-color: blue;
+    background-color: ${Theme.textLight};
   }
 `;
 

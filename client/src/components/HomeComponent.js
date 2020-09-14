@@ -2,20 +2,40 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import LinkButton from './LinkButtonComponent';
 import ListIcon from './ListIconComponent';
-import ChartIcon from './ChartIconComponent';
+import CalcIcon from './CalcIconComponent';
 import { Theme } from './theme';
+import { size, device } from './device';
 
 const Container = styled.div`
   margin: 0 auto;
   width: 90%;
   max-width: 400px;
   color: ${Theme.textDark};
+  @media ${device.laptop} {
+    max-width: 1200px;
+    display: flex;
+  }
 `;
 
 const NavItem = styled.div`
   margin-top: 10vh;
   text-align: center;
-  border: 1px gray;
+  border: 1px solid ${Theme.textDark};
+  border-radius: 0.25rem;
+  height: 300px;
+  width: 400px;
+  @media ${device.laptop} {
+    margin: 20vh 5vw;
+    flex: auto;
+  }
+`;
+
+const NavText = styled.p`
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+  height: 4rem;
+
 `;
 
 const IconWrapper = styled.div`
@@ -40,15 +60,16 @@ class Home extends Component {
           <IconWrapper>
             <ListIcon fill={Theme.textDark} />
           </IconWrapper>
-          <p>Easily keep track of you favorite stocks and see when it's time to buy!</p>
-          <LinkButton href='/wish-list' text="Watch List" margin="auto" color={Theme.textLight} colorBg={Theme.secondary} />
+          <NavText>Easily keep track of you favorite stocks and see when it's time to buy!</NavText>
+          <LinkButton href='/wish-list' text="Watch List" margin="auto" color={Theme.textLight} colorBg={Theme.secondary}
+            height="50px" width="250px" fontSize="1.2rem" />
         </NavItem>
         <NavItem>
           <IconWrapper>
-            <ChartIcon fill={Theme.textDark} />
+            <CalcIcon fill={Theme.textDark} />
           </IconWrapper>
-          <p>Analyze trades for short and long term positions.</p>
-          <LinkButton href='/trade-calc' text="Trade Calculator" margin="auto" color={Theme.textLight} colorBg={Theme.secondary} />
+          <NavText>Analyze trades for short and long term positions.</NavText>
+          <LinkButton href='/trade-calc' text="Trade Calculator" margin="auto" color={Theme.textLight} colorBg={Theme.secondary} height="50px" width="250px" fontSize="1.2rem" />
         </NavItem>
       </Container>
     );

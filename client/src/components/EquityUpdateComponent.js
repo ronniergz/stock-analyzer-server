@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import { Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import FormButton from './FormButtonComponent';
+import {Theme} from './theme';
+import {Label, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody} from 'reactstrap';
 
 const Error = styled.p`
   color: red;
@@ -26,7 +28,7 @@ class EquityUpdateModal extends Component {
   }
 
   static getDerivedStateFromProps(props) {
-    return { equity: props.equity };
+    return {equity: props.equity};
   }
 
   handleEditChange(event) {
@@ -36,7 +38,7 @@ class EquityUpdateModal extends Component {
     this.validate(input);
     // make copy of 'Equity' and modify it before updating state
     newEquity[field] = input.value;
-    this.setState({ equity: newEquity }, () => {
+    this.setState({equity: newEquity}, () => {
       console.log('HandleEditChange');
       console.log(this.state);
     });
@@ -57,10 +59,10 @@ class EquityUpdateModal extends Component {
         } else delete newErrors[input.name];
         break;
       default:
-        this.setState({ errors: {} });
+        this.setState({errors: {}});
         newErrors = {};
     }
-    this.setState({ errors: newErrors }, () => {
+    this.setState({errors: newErrors}, () => {
       console.log(this.state.errors);
     });
   }
@@ -107,15 +109,38 @@ class EquityUpdateModal extends Component {
             <Error>{this.state.errors.growth}</Error>
 
             <FormGroup row className="justify-content-center">
-              <Button type="submit" disabled={!isEnabled} className="m-4 btn btn-success" onClick={this.handleSubmit}>
-                Update
-              </Button>
-              <Button className="m-4 btn btn-secondary" onClick={this.props.onCancel}>
-                Cancel
-              </Button>
-              <Button className="m-4 btn btn-danger" onClick={this.props.onDelete}>
-                Delete
-              </Button>
+              <FormButton
+                type="submit"
+                onClick={this.handleSubmit}
+                disabled={!isEnabled}
+                margin="1.5rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.secondary}
+                height="2.5rem"
+                text="Update"
+              />
+
+              <FormButton
+                onClick={this.props.onCancel}
+                disabled={!isEnabled}
+                margin="1.5rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.cancel}
+                height="2.5rem"
+                text="Cancel"
+              />
+              <FormButton
+                onClick={this.props.onDelete}
+                disabled={!isEnabled}
+                margin="1.5rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.trim}
+                height="2.5rem"
+                text="Delete"
+              />
             </FormGroup>
           </Form>
         </ModalBody>

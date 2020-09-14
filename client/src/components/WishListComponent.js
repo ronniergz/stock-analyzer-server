@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Equity from './EquityComponent';
 import EquityUpdateModal from './EquityUpdateComponent';
 import LinkButton from './LinkButtonComponent';
+import FormButton from './FormButtonComponent';
 import styled from 'styled-components';
 import ls from 'local-storage';
-import { Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
-import { size } from './device';
-import { Theme } from './theme';
-
+import {Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
+import {size} from './device';
+import {Theme} from './theme';
 
 const Container = styled.div`
+  color: ${Theme.textDark};
   max-width: ${size.tablet};
   margin: 0 auto;
 `;
@@ -43,7 +44,7 @@ const TableBody = styled.div`
 
 const FormContainer = styled.div`
   margin: 2rem auto;
-  max-width: 400px;
+  max-width: 300px;
 `;
 
 const Error = styled.p`
@@ -65,7 +66,6 @@ const initialState = {
     price: ``,
     sticker: ``,
     mos: ``,
-
   },
   equityEdit: {},
   watchlist: [],
@@ -89,13 +89,11 @@ class WishList extends Component {
     this.handleClear = this.handleClear.bind(this);
   }
 
-  history() {
-
-  }
+  history() {}
 
   componentDidMount() {
     // get watchlist from local storage
-    this.setState({ watchlist: JSON.parse(ls.get('watchlist')) || [] });
+    this.setState({watchlist: JSON.parse(ls.get('watchlist')) || []});
   }
 
   handleAddChange(event) {
@@ -105,11 +103,10 @@ class WishList extends Component {
     this.validate(input);
     // make copy of 'Equity' and modify it before updating state
     newEquity[field] = input.value;
-    this.setState({ equityAdd: newEquity }, () => {
+    this.setState({equityAdd: newEquity}, () => {
       console.log('HandleAddChange');
       console.log(this.state);
     });
-
   }
 
   validate(input) {
@@ -138,10 +135,10 @@ class WishList extends Component {
         } else delete newErrors[input.name];
         break;
       default:
-        this.setState({ errors: initialState.errors });
+        this.setState({errors: initialState.errors});
         newErrors = {};
     }
-    this.setState({ errors: newErrors }, () => {
+    this.setState({errors: newErrors}, () => {
       console.log(this.state.errors);
     });
   }
@@ -179,12 +176,11 @@ class WishList extends Component {
   handleEditClick(equity) {
     // open equity update modal
     this.toggleModal();
-    this.setState({ equityEdit: equity });
+    this.setState({equityEdit: equity});
     console.log('Equity Clicked');
   }
 
   handleUpdate(equity) {
-
     console.log('Equity');
     console.log(equity);
     // find index of equity
@@ -198,7 +194,7 @@ class WishList extends Component {
     newWatchlist[equityIndex].futPe = equity.futPe;
     newWatchlist[equityIndex].growth = equity.growth;
     // update state
-    this.setState({ watchlist: newWatchlist });
+    this.setState({watchlist: newWatchlist});
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
     this.toggleModal();
   }
@@ -209,7 +205,7 @@ class WishList extends Component {
     let newWatchlist = this.state.watchlist.filter((equityItem) => {
       return equityItem.symbol.toUpperCase() !== equity.symbol.toUpperCase();
     });
-    this.setState({ watchlist: newWatchlist });
+    this.setState({watchlist: newWatchlist});
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
     this.toggleModal();
   }
@@ -223,14 +219,10 @@ class WishList extends Component {
   render() {
     // check if errors are empty to enable form submission
     const isEnabled = Object.keys(this.state.errors).length === 0;
-    console.log('Render');
-    console.log(this.state.watchlist);
-    console.log(ls.get('watchlist'));
     return (
       <Container>
-        <h1>Watch List</h1>
-        <LinkButton href="/home" text="Home" color={Theme.textLight} colorBg={Theme.secondary} />
-
+        <LinkButton href="/home" text="< Home" color={Theme.textLight} colorBg={Theme.secondary} margin="1rem" height="38px" width="80px" fontSize="1rem" />
+        <h3>Watch List</h3>
         <Table>
           <TableHeading>
             <TableHeadLeft>List</TableHeadLeft>
@@ -240,15 +232,16 @@ class WishList extends Component {
           </TableHeading>
           <TableBody>
             {this.state.watchlist.map((equity, i) => {
-              console.log('equity: ' + i);
-              return <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEditClick.bind(null, equity)} key={i} index={i} />;
+              return (
+                <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEditClick.bind(null, equity)} key={i} index={i} />
+              );
             })}
           </TableBody>
         </Table>
 
         <FormContainer>
           <Form onSubmit={this.handleSubmit}>
-            <FormText m={5}> Add equity to watchlist.</FormText>
+            <FormText className="m-3"> Add a new equity to the watchlist.</FormText>
 
             <FormGroup className="mb-0" row>
               <Label for="symbol" xs={6}>
@@ -284,12 +277,26 @@ class WishList extends Component {
             <Error>{this.state.errors.growth}</Error>
 
             <FormGroup row className="justify-content-center">
-              <Button type="submit" disabled={!isEnabled} className="m-4 btn btn-success" mt={4}>
-                Add
-              </Button>
-              <Button className="m-4 btn btn-secondary" onClick={this.handleClear}>
-                Clear Fields
-              </Button>
+              <FormButton
+                type="submit"
+                disabled={!isEnabled}
+                margin="2rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.secondary}
+                height="3rem"
+                text="Add"
+              />
+              <FormButton
+                onClick={this.handleClear}
+                disabled={!isEnabled}
+                margin="2rem"
+                padding="0 1rem"
+                color={Theme.textLight}
+                colorBg={Theme.cancel}
+                height="3rem"
+                text="Clear Fields"
+              />
             </FormGroup>
           </Form>
         </FormContainer>
@@ -297,11 +304,10 @@ class WishList extends Component {
         <EquityUpdateModal
           equity={this.state.equityEdit}
           onUpdate={this.handleUpdate}
-          onDelete={this.handleDelete}  // works
-          onCancel={this.toggleModal}  // works
-          modalStatus={this.state.isModalOpen}  // works
+          onDelete={this.handleDelete} // works
+          onCancel={this.toggleModal} // works
+          modalStatus={this.state.isModalOpen} // works
         />
-
       </Container>
     );
   }
