@@ -3,9 +3,10 @@ import Equity from './EquityComponent';
 import EquityUpdateModal from './EquityUpdateComponent';
 import LinkButton from './LinkButtonComponent';
 import FormButton from './FormButtonComponent';
+import Title from './TitleComponent';
 import styled from 'styled-components';
 import ls from 'local-storage';
-import {Label, Button, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
+import {Label, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 import {size} from './device';
 import {Theme} from './theme';
 
@@ -13,6 +14,11 @@ const Container = styled.div`
   color: ${Theme.textDark};
   max-width: ${size.tablet};
   margin: 0 auto;
+`;
+
+const ButtonHolder = styled.div`
+  float: left;
+  position: absolute;
 `;
 
 const Table = styled.div`
@@ -31,7 +37,8 @@ const TableHead = styled.div`
   display: table-cell;
   padding: 10px 10px;
   text-align: right;
-  border-bottom: 1px solid #999999;
+  border-bottom: 5px solid ${Theme.cancel};
+  margin-bottom: 5px;
 `;
 
 const TableHeadLeft = styled(TableHead)`
@@ -40,6 +47,24 @@ const TableHeadLeft = styled(TableHead)`
 
 const TableBody = styled.div`
   display: table-row-group;
+`;
+
+const SpacerRow = styled.div`
+  display: table-row;
+  height: 0.5rem;
+`;
+
+const SpacerCell = styled.div`
+  border-bottom: 1px solid #999999;
+  display: table-cell;
+`;
+
+const GuideText = styled.div`
+  width: 90%;
+  font-size: 0.8rem;
+  margin-left: auto;
+  margin-right: auto;
+  color: ${Theme.textDark};
 `;
 
 const FormContainer = styled.div`
@@ -60,7 +85,6 @@ const initialState = {
     symbol: '',
     futPe: '',
     growth: '',
-
     pe: '',
     eps: ``,
     price: ``,
@@ -89,10 +113,11 @@ class WishList extends Component {
     this.handleClear = this.handleClear.bind(this);
   }
 
-  history() {}
-
   componentDidMount() {
     // get watchlist from local storage
+    console.log('Component Mounted');
+    console.log(JSON.parse(ls.get('watchlist')));
+
     this.setState({watchlist: JSON.parse(ls.get('watchlist')) || []});
   }
 
@@ -221,8 +246,10 @@ class WishList extends Component {
     const isEnabled = Object.keys(this.state.errors).length === 0;
     return (
       <Container>
-        <LinkButton href="/home" text="< Home" color={Theme.textLight} colorBg={Theme.secondary} margin="1rem" height="38px" width="80px" fontSize="1rem" />
-        <h3>Watch List</h3>
+        <ButtonHolder>
+          <LinkButton href="/home" text="< Home" color={Theme.textLight} colorBg={Theme.secondary} margin="1rem" height="38px" width="80px" fontSize="1rem" />
+        </ButtonHolder>
+        <Title text="Watch List" />
         <Table>
           <TableHeading>
             <TableHeadLeft>List</TableHeadLeft>
@@ -230,6 +257,12 @@ class WishList extends Component {
             <TableHead>Price</TableHead>
             <TableHead>M.O.S.</TableHead>
           </TableHeading>
+          <SpacerRow>
+            <SpacerCell />
+            <SpacerCell />
+            <SpacerCell />
+            <SpacerCell />
+          </SpacerRow>
           <TableBody>
             {this.state.watchlist.map((equity, i) => {
               return (
@@ -239,11 +272,22 @@ class WishList extends Component {
           </TableBody>
         </Table>
 
+        <GuideText>
+          <p>
+            For each equity, the current "sticker price" is calculated based on a given projected P/E ratio 10yrs in the future and a projected growth over that
+            same time period.
+          </p>
+          <p>
+            A current "Margin of Safety" (M.O.S) is calculated based on the calculated sticker price. The percentage represents where the current price is
+            relative to the calculated sticker price.
+          </p>
+        </GuideText>
+
         <FormContainer>
           <Form onSubmit={this.handleSubmit}>
-            <FormText className="m-3"> Add a new equity to the watchlist.</FormText>
+            <GuideText>Add a new equity to the watchlist</GuideText>
 
-            <FormGroup className="mb-0" row>
+            <FormGroup className="mb-0 mt-3" row>
               <Label for="symbol" xs={6}>
                 Symbol
               </Label>
@@ -288,6 +332,7 @@ class WishList extends Component {
                 text="Add"
               />
               <FormButton
+                type="button"
                 onClick={this.handleClear}
                 disabled={!isEnabled}
                 margin="2rem"

@@ -1,6 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {Theme} from './theme.js';
+
+// Background color darkens by 20% on hover and lightens by 20% on disabled
 
 const darkenColor = (color, percentage) => {
   let colorArray = color.split(' '); // separate values into array
@@ -43,6 +45,7 @@ const LabelText = styled.span`
 const FormButton = (props) => {
   return (
     <Link
+      type={props.type}
       color={props.color}
       colorBg={props.colorBg}
       margin={props.margin}
@@ -51,6 +54,7 @@ const FormButton = (props) => {
       width={props.width}
       fontSize={props.fontSize}
       disabled={props.disabled}
+      onClick={props.onClick}
     >
       <LabelText height={props.height}>{props.text}</LabelText>
     </Link>

@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { Button } from 'reactstrap';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import { size, device } from './device';
-import { Theme } from './theme';
+import FormButton from './FormButtonComponent';
+import {device} from './device';
+import {Theme} from './theme';
 
 const TableRow = styled.div`
   display: table-row;
   height: 3rem;
-  background-color: ${props => props.index % 2 === 0 ? Theme.light : 'white'};
+  background-color: ${(props) => (props.index % 2 === 0 ? Theme.light : 'white')};
 `;
 
 const TableCell = styled.div`
@@ -22,7 +22,7 @@ const TableCell = styled.div`
   @media ${device.laptop} {
     font-size: 1.1rem;
   }
-  `;
+`;
 
 const TableCellLeft = styled(TableCell)`
   text-align: left;
@@ -30,7 +30,7 @@ const TableCellLeft = styled(TableCell)`
   @media ${device.tablet} {
     border-left: 1px solid #999999;
   }
-  `;
+`;
 
 const TableCellRight = styled(TableCell)`
   width: 15%;
@@ -44,22 +44,6 @@ const SymbolSection = styled.div`
   margin-right: auto;
 `;
 
-const EditButton = styled.div`
-  height: .9rem;
-  width: 1.8rem;
-  border-radius: 0.3rem;
-  background-color: gray;
-  font-size: .5rem;
-  margin: 0.5rem 0 0 auto; 
-  color: ${Theme.textLight};
-  font-weight: 700;
-  text-align: center;
-  &:hover {
-    cursor: pointer;
-    background-color: ${Theme.textLight};
-  }
-`;
-
 const Symbol = styled.div`
   font-weight: bold;
   font-size: 0.8rem;
@@ -71,15 +55,11 @@ const Symbol = styled.div`
 const DataSection = styled.div`
   max-width: 150px;
   margin-left: auto;
-
 `;
 
 const DataLabelGroup = styled.div`
   float: left;
-  text-align: left
-`;
-
-const DataGroup = styled.div`
+  text-align: left;
 `;
 
 const DataLabel = styled.div`
@@ -104,6 +84,10 @@ const DataLarge = styled.div`
   }
 `;
 
+const DataMOS = styled(DataLarge)`
+  color: ${(props) => (props.mos < 100 ? 'green' : 'red')};
+`;
+
 class Equity extends Component {
   constructor(props) {
     super(props);
@@ -124,7 +108,7 @@ class Equity extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    return { symbol: props.symbol.toUpperCase(), futPe: props.futPe, growth: props.growth };
+    return {symbol: props.symbol.toUpperCase(), futPe: props.futPe, growth: props.growth};
   }
 
   componentDidMount() {
@@ -139,7 +123,7 @@ class Equity extends Component {
     // calculates margin of safety and updates state object
     let x = 1 + parseFloat(this.state.growth) / 100;
     let futEps = this.state.eps * Math.pow(x, 10);
-    let stickerPrice = (((futEps * this.state.futPe) / 4)).toFixed(2)
+    let stickerPrice = ((futEps * this.state.futPe) / 4).toFixed(2);
     let Mos = ((this.state.price / stickerPrice) * 100).toFixed(2);
     this.setState({
       sticker: stickerPrice,
@@ -175,7 +159,17 @@ class Equity extends Component {
         <TableCellLeft>
           <SymbolSection>
             <Symbol>{this.state.symbol}</Symbol>
-            <EditButton onClick={this.props.edit}>Edit</EditButton>
+            <FormButton
+              type="button"
+              color={Theme.textLight}
+              colorBg={Theme.cancel}
+              margin="0.5rem 0 0 auto"
+              height="0.9rem"
+              width="1.8rem"
+              fontSize="0.5rem"
+              onClick={this.props.edit}
+              text="Edit"
+            />
           </SymbolSection>
         </TableCellLeft>
         <TableCell>
@@ -185,11 +179,11 @@ class Equity extends Component {
               <DataLabel>EPS:</DataLabel>
               <DataLabel>Growth:</DataLabel>
             </DataLabelGroup>
-            <DataGroup>
+            <div>
               <Data>{this.state.pe}</Data>
               <Data>{this.state.eps}</Data>
               <Data>{this.state.growth}%</Data>
-            </DataGroup>
+            </div>
           </DataSection>
         </TableCell>
         <TableCell>
@@ -197,11 +191,9 @@ class Equity extends Component {
           <Data>Sticker: ${this.state.sticker}</Data>
         </TableCell>
         <TableCellRight>
-          <DataLarge>{this.state.mos}%</DataLarge>
+          <DataMOS mos={this.state.mos}>{this.state.mos}%</DataMOS>
         </TableCellRight>
       </TableRow>
-
-
     );
   }
 }

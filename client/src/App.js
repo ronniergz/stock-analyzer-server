@@ -1,11 +1,17 @@
-import React, { Component } from "react";
-import { Switch, Route, Redirect, BrowserRouter } from "react-router-dom";
-import Header from "./components/HeaderComponent";
-import Home from "./components/HomeComponent";
-import WishList from "./components/WishListComponent";
-import TradeCalc from "./components/TradeCalcComponent";
+import React, {Component} from 'react';
+import {Switch, Route, Redirect, BrowserRouter} from 'react-router-dom';
+import Header from './components/HeaderComponent';
+import Footer from './components/FooterComponent';
+import Home from './components/HomeComponent';
+import WishList from './components/WishListComponent';
+import TradeCalc from './components/TradeCalcComponent';
+import styled from 'styled-components';
 
-import "./App.css";
+import './App.css';
+
+const Body = styled.div`
+  height: 100vh;
+`;
 
 class App extends Component {
   render() {
@@ -21,7 +27,7 @@ class App extends Component {
 
     return (
       <BrowserRouter>
-        <div className="App">
+        <Body className="App">
           <Header />
           <Switch>
             <Route exact path="/home" component={HomePage} />
@@ -29,7 +35,8 @@ class App extends Component {
             <Route exact path="/trade-calc" component={TradeCalcPage} />
             <Redirect to="/home" />
           </Switch>
-        </div>
+          <Footer />
+        </Body>
       </BrowserRouter>
     );
   }

@@ -82,9 +82,7 @@ class EquityUpdateModal extends Component {
         <ModalHeader className="justify-content-center">{this.props.equity.symbol}</ModalHeader>
         <ModalBody>
           <Form onSubmit={this.handleSubmit}>
-            <FormText m={5} className="justify-content-center">
-              Edit existing equity.
-            </FormText>
+            <FormText m={5}>Edit existing equity.</FormText>
             <FormGroup className="mb-0" row>
               <Label for="symbol" xs={6}>
                 Future P/E
@@ -122,8 +120,8 @@ class EquityUpdateModal extends Component {
               />
 
               <FormButton
+                type="button"
                 onClick={this.props.onCancel}
-                disabled={!isEnabled}
                 margin="1.5rem"
                 padding="0 1rem"
                 color={Theme.textLight}
@@ -132,8 +130,8 @@ class EquityUpdateModal extends Component {
                 text="Cancel"
               />
               <FormButton
+                type="button"
                 onClick={this.props.onDelete}
-                disabled={!isEnabled}
                 margin="1.5rem"
                 padding="0 1rem"
                 color={Theme.textLight}

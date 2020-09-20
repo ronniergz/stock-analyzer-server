@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {Theme} from './theme.js';
 
@@ -18,7 +18,7 @@ transition: transform 0.5s ease;
   text-decoration: none;
   color: ${(props) => props.color};
   cursor: pointer;
-  transform: perspective(1px) scale(1.1);    
+  transform: perspective(1px) scale(1.05);    
 }
 `;
 

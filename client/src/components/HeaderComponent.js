@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import LogoIcon from './LogoIconComponent';
+import LogoIcon from './svg/LogoIconComponent';
 import {Theme} from './theme';
 import {device} from './device';
 

@@ -2,18 +2,22 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import FormButton from './FormButtonComponent';
 import LinkButton from './LinkButtonComponent';
-import {Row, Col, Button, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input} from 'reactstrap';
+import Title from './TitleComponent';
+import {Row, Col, Form, FormGroup, InputGroup, InputGroupText, InputGroupAddon, Label, Modal, ModalHeader, ModalBody, Input} from 'reactstrap';
+import {size} from './device';
 import {Theme} from './theme';
 
-const LinkColor = '#444444';
-
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: ${size.tablet};
   margin: 0 auto;
 `;
 
+const ButtonHolder = styled.div`
+  float: left;
+  position: absolute;
+`;
 const FormContainer = styled.div`
-  margin: 2rem auto;
+  margin: 2rem auto 22rem auto;
   @media (max-width: 767px) {
     max-width: 450px;
   }
@@ -75,14 +79,10 @@ class TradeCalc extends Component {
     const field = input.name;
     this.validate(input);
     this.setState({[field]: input.value}, () => {
-      console.log(JSON.stringify(this.state));
       // Check if we have price and share count to calculate amount traded
       if (this.state.shares !== '' && this.state.purchasePrice !== '') {
-        console.log('IF condition validated');
         let traded = (this.state.shares * this.state.purchasePrice).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        this.setState({amountTraded: traded}, () => {
-          console.log(JSON.stringify(this.state));
-        });
+        this.setState({amountTraded: traded});
       }
     });
   }
@@ -131,7 +131,7 @@ class TradeCalc extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
+    // Perform trade calculations
     let gain = ((this.state.salePrice - this.state.purchasePrice - this.state.commission * 2) * 100) / this.state.purchasePrice;
     let shortTermNet = this.toNumber(this.state.amountTraded) * (gain / 100) * ((100 - this.state.incomeTax) / 100);
     let shortTermGain = (shortTermNet / this.toNumber(this.state.amountTraded)) * 100;
@@ -148,8 +148,6 @@ class TradeCalc extends Component {
       },
       () => {
         this.toggleModal();
-        console.log('Form submitted!');
-        console.log('New state is: ' + JSON.stringify(this.state));
       }
     );
   }
@@ -165,7 +163,6 @@ class TradeCalc extends Component {
   }
 
   handleClear() {
-    console.log('Initial state: ' + JSON.stringify(initialState));
     this.setState(initialState);
   }
 
@@ -175,8 +172,10 @@ class TradeCalc extends Component {
     return (
       <Container>
         <div>
-          <h1>Trade Calculator</h1>
-          <LinkButton href="/home" text="< Home" color={Theme.textLight} colorBg={Theme.secondary} margin="1rem" height="38px" width="80px" fontSize="1rem" />
+          <ButtonHolder>
+            <LinkButton href="/home" text="< Home" color={Theme.textLight} colorBg={Theme.secondary} margin="1rem" height="38px" width="80px" fontSize="1rem" />
+          </ButtonHolder>
+          <Title text="Trade Calculator" />
         </div>
 
         <FormContainer>
@@ -319,6 +318,7 @@ class TradeCalc extends Component {
                 text="Calculate"
               />
               <FormButton
+                type="button"
                 onClick={this.handleClear}
                 margin="2rem"
                 padding="0 1rem"
@@ -362,7 +362,6 @@ class TradeCalc extends Component {
             </Row>
             <Row className="my-4 d-flex justify-content-center">
               <FormButton
-                type="submit"
                 onClick={this.toggleModal}
                 margin="2rem"
                 padding="0 1rem"
