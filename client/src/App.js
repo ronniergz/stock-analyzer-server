@@ -15,24 +15,14 @@ const Body = styled.div`
 
 class App extends Component {
   render() {
-    const HomePage = () => {
-      return <Home />;
-    };
-    const WishListPage = () => {
-      return <WishList />;
-    };
-    const TradeCalcPage = () => {
-      return <TradeCalc />;
-    };
-
     return (
       <BrowserRouter>
         <Body className="App">
           <Header />
           <Switch>
-            <Route exact path="/home" component={HomePage} />
-            <Route exact path="/wish-list" component={WishListPage} />
-            <Route exact path="/trade-calc" component={TradeCalcPage} />
+            <Route exact path="/home" render={() => <Home />} />
+            <Route exact path="/wish-list" render={() => <WishList />} />
+            <Route exact path="/trade-calc" render={() => <TradeCalc />} />
             <Redirect to="/home" />
           </Switch>
           <Footer />

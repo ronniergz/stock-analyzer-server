@@ -6,7 +6,7 @@ import FormButton from './FormButtonComponent';
 import Title from './TitleComponent';
 import styled from 'styled-components';
 import ls from 'local-storage';
-import {Label, Form, FormGroup, FormText, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
+import {Label, Form, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 import {size} from './device';
 import {Theme} from './theme';
 

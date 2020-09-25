@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
-import LogoIcon from './svg/LogoIconComponent';
 import {Theme} from './theme';
-import {device} from './device';
 
 const AppFooter = styled.div`
   height: 50px;
