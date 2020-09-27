@@ -91,6 +91,10 @@ class TradeCalc extends Component {
     let newErrors = this.state.errors;
 
     switch (input.name) {
+      case 'symbol':
+        input.value = input.value.toUpperCase();
+        break;
+
       case 'shares':
         if (isNaN(input.value)) {
           console.log('Input value: ' + input.value);
@@ -332,33 +336,31 @@ class TradeCalc extends Component {
         </FormContainer>
 
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal} className="justify-content-center">
-            {this.state.symbol}
-          </ModalHeader>
+          <ModalHeader className="justify-content-center">{this.state.symbol}</ModalHeader>
           <ModalBody>
             <Row>
-              <Col m="3">Amount Traded</Col>
-              <Col m="3">${this.state.amountTraded}</Col>
+              <Col className="col-6 text-right">Amount Traded:</Col>
+              <Col className="col-3 offset-1 text-right">${this.state.amountTraded}</Col>
             </Row>
             <Row>
-              <Col>Pre-Tax Gain</Col>
-              <Col>{this.state.gain}%</Col>
+              <Col className="col-6 text-right">Pre-Tax Gain:</Col>
+              <Col className="col-3 offset-1 text-right">{this.state.gain}%</Col>
             </Row>
             <Row>
-              <Col>Short Term Gain</Col>
-              <Col>{this.state.shortTermGain}%</Col>
+              <Col className="col-6 text-right">Short Term Gain:</Col>
+              <Col className="col-3 offset-1 text-right">{this.state.shortTermGain}%</Col>
             </Row>
             <Row>
-              <Col>Short Term Net</Col>
-              <Col>${this.state.shortTermNet}</Col>
+              <Col className="col-6 text-right">Short Term Net:</Col>
+              <Col className="col-3 offset-1 text-right">${this.state.shortTermNet}</Col>
             </Row>
             <Row>
-              <Col>Long Term Gain</Col>
-              <Col>{this.state.longTermGain}%</Col>
+              <Col className="col-6 text-right">Long Term Gain:</Col>
+              <Col className="col-3 offset-1 text-right">{this.state.longTermGain}%</Col>
             </Row>
             <Row>
-              <Col>Long Term Net</Col>
-              <Col>${this.state.longTermNet}</Col>
+              <Col className="col-6 text-right">Long Term Net:</Col>
+              <Col className="col-3 offset-1 text-right">${this.state.longTermNet}</Col>
             </Row>
             <Row className="my-4 d-flex justify-content-center">
               <FormButton

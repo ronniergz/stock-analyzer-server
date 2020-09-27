@@ -68,7 +68,7 @@ const GuideText = styled.div`
 `;
 
 const FormContainer = styled.div`
-  margin: 2rem auto;
+  margin: 4rem auto 6rem auto;
   max-width: 300px;
 `;
 
@@ -181,7 +181,7 @@ class WishList extends Component {
         errors: {},
       },
       () => {
-        console.log(this.state);
+        this.handleClear();
       }
     );
   }
@@ -278,8 +278,8 @@ class WishList extends Component {
             same time period.
           </p>
           <p>
-            A current "Margin of Safety" (M.O.S) is calculated based on the calculated sticker price. The percentage represents where the current price is
-            relative to the calculated sticker price.
+            A current "Margin of Safety" (M.O.S) is calculated based on the sticker price. The percentage represents where the current price is, relative to the
+            sticker price.
           </p>
         </GuideText>
 

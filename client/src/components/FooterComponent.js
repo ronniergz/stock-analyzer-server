@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {Theme} from './theme';
 
 const AppFooter = styled.div`
-  height: 50px;
+  height: 75px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,7 +12,7 @@ const AppFooter = styled.div`
 
 const FooterText = styled.span`
   margin: 0 1.5rem;
-  font-size: 0.25rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: ${Theme.textLight};
 `;
