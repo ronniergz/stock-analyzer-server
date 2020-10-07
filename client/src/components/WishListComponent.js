@@ -3,8 +3,11 @@ import Equity from './EquityComponent';
 import EquityUpdateModal from './EquityUpdateComponent';
 import LinkButton from './LinkButtonComponent';
 import FormButton from './FormButtonComponent';
+import TableHeading from './TableHeadingComponent';
 import Title from './TitleComponent';
 import styled from 'styled-components';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCaretUp, faCaretDown} from '@fortawesome/free-solid-svg-icons';
 import ls from 'local-storage';
 import {Label, Form, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Input} from 'reactstrap';
 import {size} from './device';
@@ -25,11 +28,6 @@ const Table = styled.div`
   display: table;
   width: 100%;
   margin: 0 auto 5rem auto;
-`;
-
-const TableHeading = styled.div`
-  display: table-header-group;
-  font-weight: bold;
 `;
 
 const TableHead = styled.div`
@@ -111,6 +109,7 @@ class WishList extends Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.validate = this.validate.bind(this);
     this.handleClear = this.handleClear.bind(this);
+    this.handleSort = this.handleSort.bind(this);
   }
 
   componentDidMount() {
@@ -214,10 +213,10 @@ class WishList extends Component {
     });
     // update equity in watchlist copy
     let newWatchlist = this.state.watchlist;
-    //console.log(newWatchlist[equityIndex].futPe);
-    console.log(newWatchlist);
     newWatchlist[equityIndex].futPe = equity.futPe;
     newWatchlist[equityIndex].growth = equity.growth;
+    newWatchlist[equityIndex].price = equity.price;
+    newWatchlist[equityIndex].mos = equity.mos;
     // update state
     this.setState({watchlist: newWatchlist});
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
@@ -233,6 +232,19 @@ class WishList extends Component {
     this.setState({watchlist: newWatchlist});
     ls.set('watchlist', JSON.stringify(newWatchlist)); // update localStorage
     this.toggleModal();
+  }
+
+  handleSort(method) {
+    return () => {
+      let sortedWatchlist = this.state.watchlist;
+      sortedWatchlist.sort((a, b) => {
+        if (a[method] < b[method]) return -1;
+        else return 1;
+      });
+      console.log(sortedWatchlist);
+      this.setState({watchlist: sortedWatchlist});
+      //ls.set('watchlist', JSON.stringify(sortedWatchlist)); // update localStorage
+    };
   }
 
   toggleModal() {
@@ -252,10 +264,22 @@ class WishList extends Component {
         <Title text="Watch List" />
         <Table>
           <TableHeading>
-            <TableHeadLeft>List</TableHeadLeft>
+            <TableHeadLeft>
+              <TableHeading name="List" sort={this.handleSort('symbol')} />
+            </TableHeadLeft>
             <TableHead>Data</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>M.O.S.</TableHead>
+            <TableHead>
+              <Heading onClick={this.handleSort('price')}>
+                Price
+                <FontAwesomeIcon icon={faCaretUp} />
+              </Heading>
+            </TableHead>
+            <TableHead>
+              <Heading onClick={this.handleSort('mos')}>
+                M.O.S.
+                <FontAwesomeIcon icon={faCaretUp} />
+              </Heading>
+            </TableHead>
           </TableHeading>
           <SpacerRow>
             <SpacerCell />
@@ -266,7 +290,15 @@ class WishList extends Component {
           <TableBody>
             {this.state.watchlist.map((equity, i) => {
               return (
-                <Equity symbol={equity.symbol} growth={equity.growth} futPe={equity.futPe} edit={this.handleEditClick.bind(null, equity)} key={i} index={i} />
+                <Equity
+                  symbol={equity.symbol}
+                  growth={equity.growth}
+                  futPe={equity.futPe}
+                  update={this.handleUpdate.bind(null, equity)}
+                  edit={this.handleEditClick.bind(null, equity)}
+                  key={i}
+                  index={i}
+                />
               );
             })}
           </TableBody>

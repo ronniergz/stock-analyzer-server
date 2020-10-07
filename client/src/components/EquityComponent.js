@@ -93,14 +93,15 @@ class Equity extends Component {
     super(props);
     this.state = {
       symbol: '',
+      futPe: '',
+      growth: '',
       price: '',
       eps: '',
       pe: '',
-      futPe: '',
-      growth: '',
       sticker: '',
       mos: '',
     };
+
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.getData = this.getData.bind(this);
@@ -125,10 +126,15 @@ class Equity extends Component {
     let futEps = this.state.eps * Math.pow(x, 10);
     let stickerPrice = ((futEps * this.state.futPe) / 4).toFixed(2);
     let Mos = ((this.state.price / stickerPrice) * 100).toFixed(2);
-    this.setState({
-      sticker: stickerPrice,
-      mos: Mos,
-    });
+    this.setState(
+      {
+        sticker: stickerPrice,
+        mos: Mos,
+      },
+      () => {
+        // update watchlist with current price and mos
+      }
+    );
   }
 
   getData() {

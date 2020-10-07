@@ -8,11 +8,13 @@ const AppHeader = styled.div`
   font-family: ${Theme.fontPrimary};
   background-color: ${Theme.primary};
   height: 8vh;
+  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   @media ${device.tablet} {
     height: 13vh;
+    min-height: 80px;
   }
 `;
 
