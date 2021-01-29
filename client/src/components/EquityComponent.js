@@ -132,8 +132,8 @@ class Equity extends Component {
   }
 
   getData() {
-    // request current scraped data from server
-    fetch('http://192.168.1.81:5000/api/scrape?symbol=' + this.state.symbol)
+    // request current scraped data from server:
+    fetch('https://stock-analyzer.xyz:5000/api/scrape?symbol=' + this.state.symbol)
       .then((response) => {
         if (response.status !== 200) {
           console.log('Looks like there was a problem. Status Code: ' + response.status);
