@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import FormButton from './FormButtonComponent';
 import {device} from './device';
 import {Theme} from './theme';
+import path from 'path';
+import fs from 'fs';
+import https from 'https';
 
 const TableRow = styled.div`
   display: table-row;
