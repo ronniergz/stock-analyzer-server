@@ -159,6 +159,11 @@ app.get('/api/scrape', cors(), (req, res) => {
   });
 });
 
+// testing
+app.get('/api/test', cors(), (req, res) => {
+  res.send("Hello!");
+});
+
 //const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
 process.once('SIGUSR2', function () {
