@@ -214,8 +214,6 @@ class WishList extends Component {
       });
   }
 
-  }
-
   handleEditClick(equity) {
     // open equity update modal
     this.toggleModal();
