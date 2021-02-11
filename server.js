@@ -3,15 +3,28 @@
 //const Equity = require('./api/data/models/equity');
 //const User = require('./api/data/models/user');
 
-const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const scrape = require('./scrapeQuote.js');
-const https = require('https');
 const fs = require('fs');
-
+const https = require('https');
+const express = require('express');
 const app = express();
-const port = process.env.PORT || 5000;
+
+//const port = process.env.PORT || 5000;
+
+const credentials = {
+  cert: fs.readFileSync(
+    path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/fullchain.pem'),
+    `utf-8`,
+  ),
+  key: fs.readFileSync(
+    path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem'),
+    'utf-8',
+  ),
+};
+const httpsServer = https.createServer(credentials, app)
+httpsServer.listen(5000)
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -150,10 +163,10 @@ app.get('/api/scrape', cors(), (req, res) => {
   });
 });
 
-const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+//const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
 process.once('SIGUSR2', function () {
-  server.close(function () {
+  httpsServer.close(function () {
     process.kill(process.pid, 'SIGUSR2');
   });
 });
