@@ -174,17 +174,17 @@ class Equity extends Component {
           console.log('Looks like there was a problem. Status Code: ' + response.status);
           return;
         }
-        response.text()
-        // response.json().then((data) => {
-        //   this.setState({
-        //     price: data.Price,
-        //     eps: data.EPS,
-        //     pe: data.PE,
-        //   });
-        //   this.getMos();
-        // });
+        //response.text()
+        response.json().then((data) => {
+          this.setState({
+            price: data.Price,
+            eps: data.EPS,
+            pe: data.PE,
+          });
+          this.getMos();
+        });
       })
-      .then(text => console.log(text))
+      //.then(text => console.log(text))
       .catch(function (err) {
         console.log('Fetch Error :-S', err);
       });
