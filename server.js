@@ -14,14 +14,8 @@ const app = express();
 //const port = process.env.PORT || 5000;
 
 const credentials = {
-  cert: fs.readFileSync(
-    path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/fullchain.pem'),
-    `utf-8`,
-  ),
-  key: fs.readFileSync(
-    path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem'),
-    'utf-8',
-  ),
+  cert: fs.readFileSync('/etc/letsencrypt/live/stock-analyzer.xyz/fullchain.pem',`utf-8`),
+  key: fs.readFileSync('/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem', 'utf-8')
 };
 const httpsServer = https.createServer(credentials, app)
 httpsServer.listen(5000)
