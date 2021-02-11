@@ -18,7 +18,9 @@ const credentials = {
   key: fs.readFileSync('/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem', 'utf-8')
 };
 const httpsServer = https.createServer(credentials, app)
-httpsServer.listen(5000)
+httpsServer.listen(5000, () => {
+  console.log("Server is listening on port: 5000");
+})
 
 app.use(cors());
 app.use(bodyParser.json());
