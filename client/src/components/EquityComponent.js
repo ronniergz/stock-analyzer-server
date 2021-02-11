@@ -136,18 +136,18 @@ class Equity extends Component {
 
   getData() {
 
-    const options = {
-    //   // when using this code in production, for high throughput you should not read
-    //   //   from the filesystem for every call, it can be quite expensive. Instead
-    //   //   consider storing these in memory
-      cert: fs.readFileSync(
-        path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/fullchain.pem'),
-        `utf-8`,
-      ),
-      key: fs.readFileSync(
-        path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem'),
-        'utf-8',
-      ),
+    // const options = {
+    // //   // when using this code in production, for high throughput you should not read
+    // //   //   from the filesystem for every call, it can be quite expensive. Instead
+    // //   //   consider storing these in memory
+    //   cert: fs.readFileSync(
+    //     path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/fullchain.pem'),
+    //     `utf-8`,
+    //   ),
+    //   key: fs.readFileSync(
+    //     path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem'),
+    //     'utf-8',
+    //   ),
     //   //passphrase:fd
     //   //  '<your-passphrase>',
   
@@ -161,7 +161,7 @@ class Equity extends Component {
     //   //  https://nodejs.org/api/https.html#https_https_request_url_options_callback
   
     //   keepAlive: false, // switch to true if you're making a lot of calls from this client
-    };
+    // };
 
     // const sslConfiguredAgent = new https.Agent(options);
 
