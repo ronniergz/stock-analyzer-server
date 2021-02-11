@@ -7,6 +7,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const scrape = require('./scrapeQuote.js');
+const https = require('https');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 5000;
