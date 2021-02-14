@@ -10,16 +10,18 @@ const fs = require('fs');
 const https = require('https');
 const express = require('express');
 const app = express();
+const port = 3000;
 
-//const port = process.env.PORT || 5000;
+app.set('secPort', port+443);
 
 const credentials = {
   cert: fs.readFileSync('/etc/letsencrypt/live/stock-analyzer.xyz/fullchain.pem',`utf-8`),
   key: fs.readFileSync('/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem', 'utf-8')
 };
-const httpsServer = https.createServer(credentials, app)
-httpsServer.listen(5000, () => {
-  console.log("Server is listening on port: 5000");
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(app.get('secPort'), () => {
+  console.log("Server is listening on port", app.get('secPort'));
 })
 
 app.use(cors());

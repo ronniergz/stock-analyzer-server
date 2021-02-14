@@ -166,7 +166,7 @@ class Equity extends Component {
     // const sslConfiguredAgent = new https.Agent(options);
 
     // request current scraped data from server: 
-    fetch('https://stock-analyzer.xyz/api/scrape?symbol=' + this.state.symbol, {
+    fetch('https://stock-analyzer.xyz:3443/api/scrape?symbol=' + this.state.symbol, {
       // agent: sslConfiguredAgent
     })
       .then((response) => {
