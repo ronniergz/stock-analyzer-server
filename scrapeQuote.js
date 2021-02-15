@@ -25,8 +25,3 @@ module.exports = async function scrape(symbol) {
     PE: rawPe,
   };
 };
-
-// Yahoo XPaths:
-//   Price //*[@id="quote-header-info"]/div[3]/div/div/span[1]
-//   EPS // *[@id="quote-summary"]/div[2]/table/tbody/tr[4]/td[2]/span
-//   PE //*[@id="quote-summary"]/div[2]/table/tbody/tr[3]/td[2]/span

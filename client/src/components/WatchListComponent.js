@@ -111,7 +111,6 @@ class WishList extends Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.validate = this.validate.bind(this);
     this.handleClear = this.handleClear.bind(this);
-    this.handleTest = this.handleTest.bind(this);
   }
 
   componentDidMount() {
@@ -199,21 +198,6 @@ class WishList extends Component {
     this.setState(newState);
   }
 
-  handleTest() {
-    fetch('https://stock-analyzer.xyz/api/test')
-      .then((response) => {
-        if (response.status !== 200) {
-          console.log('Looks like there was a problem. Status Code: ' + response.status);
-          return;
-        }
-        response.text()
-      })
-      .then(text => console.log(text))
-      .catch(function (err) {
-        console.log('Fetch Error :-S', err);
-      });
-  }
-
   handleEditClick(equity) {
     // open equity update modal
     this.toggleModal();
@@ -298,17 +282,6 @@ class WishList extends Component {
             sticker price.
           </p>
         </GuideText>
-
-        <FormButton
-          type="button"
-          onClick={this.handleTest}
-          margin="2rem"
-          padding="0 1rem"
-          color={Theme.textLight}
-          colorBg={Theme.cancel}
-          height="3rem"
-          text="testing"
-        />
 
         <FormContainer>
           <Form onSubmit={this.handleSubmit}>

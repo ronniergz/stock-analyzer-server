@@ -63,7 +63,7 @@ class Home extends Component {
           </IconWrapper>
           <NavText>Easily keep track of you favorite stocks and see when it's time to buy!</NavText>
           <LinkButton
-            href="/wish-list"
+            href="/watch-list"
             text="Watch List"
             margin="auto"
             color={Theme.textLight}

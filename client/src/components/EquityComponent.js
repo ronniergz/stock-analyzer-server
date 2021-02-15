@@ -102,7 +102,6 @@ class Equity extends Component {
       mos: '',
     };
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.getData = this.getData.bind(this);
     this.getMos = this.getMos.bind(this);
   }
@@ -112,10 +111,6 @@ class Equity extends Component {
   }
 
   componentDidMount() {
-    this.getData();
-  }
-
-  componentDidUpdate() {
     this.getData();
   }
 

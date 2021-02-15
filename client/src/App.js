@@ -3,7 +3,7 @@ import {Switch, Route, Redirect, BrowserRouter} from 'react-router-dom';
 import Header from './components/HeaderComponent';
 import Footer from './components/FooterComponent';
 import Home from './components/HomeComponent';
-import WishList from './components/WishListComponent';
+import WatchList from './components/WatchListComponent';
 import TradeCalc from './components/TradeCalcComponent';
 import styled from 'styled-components';
 
@@ -21,7 +21,7 @@ class App extends Component {
           <Header />
           <Switch>
             <Route exact path="/home" render={() => <Home />} />
-            <Route exact path="/wish-list" render={() => <WishList />} />
+            <Route exact path="/watch-list" render={() => <WatchList />} />
             <Route exact path="/trade-calc" render={() => <TradeCalc />} />
             <Redirect to="/home" />
           </Switch>
