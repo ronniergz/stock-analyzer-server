@@ -3,9 +3,6 @@ import styled from 'styled-components';
 import FormButton from './FormButtonComponent';
 import {device} from './device';
 import {Theme} from './theme';
-import path from 'path';
-import fs from 'fs';
-import https from 'https';
 
 const TableRow = styled.div`
   display: table-row;
@@ -134,47 +131,15 @@ class Equity extends Component {
     });
   }
 
-  getData() {
-
-    // const options = {
-    // //   // when using this code in production, for high throughput you should not read
-    // //   //   from the filesystem for every call, it can be quite expensive. Instead
-    // //   //   consider storing these in memory
-    //   cert: fs.readFileSync(
-    //     path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/fullchain.pem'),
-    //     `utf-8`,
-    //   ),
-    //   key: fs.readFileSync(
-    //     path.resolve(__dirname, '/etc/letsencrypt/live/stock-analyzer.xyz/privkey.pem'),
-    //     'utf-8',
-    //   ),
-    //   //passphrase:fd
-    //   //  '<your-passphrase>',
-  
-    //   // in test, if you're working with self-signed certificates
-    //   rejectUnauthorized: false,
-    //   // ^ if you intend to use this in production, please implement your own
-    //   //  `checkServerIdentity` function to check that the certificate is actually
-    //   //  issued by the host you're connecting to.
-    //   //
-    //   //  eg implementation here:
-    //   //  https://nodejs.org/api/https.html#https_https_request_url_options_callback
-  
-    //   keepAlive: false, // switch to true if you're making a lot of calls from this client
-    // };
-
-    // const sslConfiguredAgent = new https.Agent(options);
-
+  getData() {   
     // request current scraped data from server: 
-    fetch('https://stock-analyzer.xyz:3443/api/scrape?symbol=' + this.state.symbol, {
-      // agent: sslConfiguredAgent
+    fetch('http://localhost:5000/api/scrape?symbol=' + this.state.symbol, {
     })
       .then((response) => {
         if (response.status !== 200) {
           console.log('Looks like there was a problem. Status Code: ' + response.status);
           return;
         }
-        //response.text()
         response.json().then((data) => {
           this.setState({
             price: data.Price,
@@ -184,7 +149,6 @@ class Equity extends Component {
           this.getMos();
         });
       })
-      //.then(text => console.log(text))
       .catch(function (err) {
         console.log('Fetch Error :-S', err);
       });
